@@ -1,0 +1,14 @@
+---
+title: "MultiBaC user guide"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{MultiBaC user guide}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+

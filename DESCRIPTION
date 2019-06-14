@@ -1,0 +1,32 @@
+Package: MultiBaC
+Type: Package
+Title: Multi-omic Batch effect Correction
+Version: 0.1.0
+Author: person("Manuel", "Ugidos", email = "mugidos@ibv.csic.es")
+Maintainer: The package maintainer <cmartinez@cipf.es>
+Description: MultiBaC performs a multi-omic, multi-batch correction.
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+Imports: abind, graphics, stats, ggplot2
+Suggests: knitr, rmarkdown
+VignetteBuilder: knitr
+Collate:
+    'ASCA3f.R'
+    'ASCAfun1.R'
+    'ASCAfun2.R'
+    'ASCAfun12.R'
+    'ASCAfun-triple.R'
+    'PCA-GENES.R'
+    'ASCAfunres.R'
+    'ASCA2f.R'
+    'auxfunctions.R'
+    'plsClass.R'
+    'MultiBaC.R'
+    'MultiBaC_class.R'
+    'sceeplot.R'
+    'show.var.R'
+    'SPE.lims.R'
+    'leverage.lims.R'
+NeedsCompilation: no
+RoxygenNote: 6.1.1
