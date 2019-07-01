@@ -12,12 +12,18 @@ NULL
 #' @export
 #'
 #' @examples
-batchEstimation <- function(Xunfold, batch_factor) {
+batchEstimation <- function(ListOfBatches, batch_factor, commonOmic) {
 
   initpar <- par(c("mai", "pin", "xpd"))
   mai <- c(initpar$mai[1:3], initpar$pin[2]-0.15)
   on.exit(par(mai = initpar$mai, xpd = initpar$xpd))
   par(mai = mai)
+
+  # Extract common omic ---------------------------------------------------------------
+  Xunfold <- NULL
+  for ( lab in seq_along(ListOfBatches)) {
+    Xunfold <- rbind(Xunfold, t(ListOfBatches[[lab]][[commonOmic]]))
+  }
 
   #----------------------- Calculate Overall Mean -------------------------------------
 
