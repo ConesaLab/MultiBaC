@@ -37,9 +37,9 @@ NULL
 #' @export
 #'
 #' @examples
-#' my.asca <- ASCA.3f(X = t(data.example), Designa = Designa,
+#' \dontrun{my.asca <- ASCA.3f(X = t(data.example), Designa = Designa,
 #'     Designb = Designb, Designc = Designc, Fac= c(1, 2, 2, 2, 2, 2, 2, 2),
-#'     type = c(1, 1, 2))
+#'     type = c(1, 1, 2))}
 ASCA.3f<-function(X = X,Designa = Designa, Designb = Designb, Designc = Designc,Fac = c(1,2,2,2,2,2,2,2),type = c(1,1,2), showvar=TRUE, showscree=TRUE)
 
 {

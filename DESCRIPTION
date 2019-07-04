@@ -8,7 +8,7 @@ Description: MultiBaC performs a multi-omic, multi-batch correction.
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
-Imports: abind, graphics, stats, ggplot2
+Imports: graphics, ggplot2, MultiAssayExperiment, ropls
 Suggests: knitr, rmarkdown
 VignetteBuilder: knitr
 Collate:
@@ -20,13 +20,13 @@ Collate:
     'PCA-GENES.R'
     'ASCAfunres.R'
     'ASCA2f.R'
-    'auxfunctions.R'
-    'plsClass.R'
-    'MultiBaC.R'
     'MultiBaC_class.R'
+    'auxfunctions.R'
+    'MultiBaC.R'
     'sceeplot.R'
     'show.var.R'
     'SPE.lims.R'
+    'data.R'
     'leverage.lims.R'
 NeedsCompilation: no
 RoxygenNote: 6.1.1

@@ -1,11 +1,9 @@
-#' @import stats
 #' @import graphics
-#' @import abind
+#' @import stats
 #' @import ggplot2
-#' @import MultiAssayExperiment
-#' @import ropls
 #' @include auxfunctions.R
 #' @include ASCA2f.R
+#' @include MultiBaC_class.R
 NULL
 
 #' MultiBaC
@@ -21,15 +19,13 @@ NULL
 
 #' MultiBaC
 #'
-#' @param X list of common omics
-#' @param YZ list of non-common omics
-#' @param test.comp maximum number of components allowed
-#' @param it maximum number of iterations allowed for nipals algorithm
-#' @param tol threshold value to validate nipals algorithm convergence
+#' MultiBaC performs a multi-omic, multi-batch correction
+#'
+#' @param ListOfBatches A list. Object returned by inputData function.
+#' @param test.comp maximum number of components allowed in PLS models.
 #' @param scale TRUE or FALSE. Whether X and Y matrices have to be scaled
 #' @param center TRUE or FALSE. Whether X and Y matrices have to be centered
-#' @param cond.factor list of experimental design conditions for each lab
-#' @param estBatchmagnitude TRUE or FALSE. Whether to show an estimation of batch effect magnitude or not
+#' @param cond.factor A list with one slot for each batch containing the common experimental setting.
 #' @param Fac Vector with numbers of components to extract in each submodel, by order:
 #' \enumerate{
 #'     \item Model a (time)
@@ -41,84 +37,220 @@ NULL
 #'     \item Model abc (interaction) to not consider interations set to 0
 #'     \item Number components of residues
 #' }
-#' @param type Vector indicating whether the analyses of the model of the factors that interact with time (b.ab and c.ac) are studied jointly(1) or separately(2).
-#' @param showvar Show variability associated to each model or not.
-#' @param showscree Show a screenplot.
-#' @param nm TRUE or FALSE. Whether to compute a final step to improve batch correction.
+#' If NULL (default) the function optimize each value.
+#' @param commonOmic Name or index of the commonOmic between the batches. If the index is given, the common data matrix must be in the same possition in each batch.
+#' @param showplot If TRUE, the Q^2 and the Fac optimization will be plotted.
+#' @param crossval Integer: number of cross-validation segments. The number of samples (rows of 'x') must be at least >= crossvalI.
+#' If NULL (default) leave-one-out crossvalidation is performed
 #'
-#' @return A list with two slots
-#' #' \describe{
-#'     \item{X.star}{List of common omics matrices corrected}
-#'     \item{YZ.star}{List of non-common omics matrices corrected}
-#' }
+#' @return A list with as many slots as the given number of batches.
+#' Returns the same structure than the input data "ListOfBatches" but with batch-corrected data.
 #' @export
 #'
 #' @examples
-#' Corrected_Matrices <- MultiBaC ( X = list("A" = rnaseq_a, "B" = rnaseq_b),
-#'                                  YZ = list("A" = chipseq_a, "B" = metabolomics_b),
-#'                                  test.comp = 3, cond.factor = design)
+#' \dontrun{
+#' ## Using example data provided by MultiBaC package
+#' data(example)
+#' inputData <- readData(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par, batches = c(1,1,2,2,3,3),
+#' omicNames = c("RNA", "GRO", "RNA", "RIBO", "RNA", "PAR"),
+#' batchesNames = c("A", "B", "C"))
+#'
+#' ## Creating cond.factor
+#' cond.factor = list("A" = c("Glu+", "Glu+", "Glu+", "Glu-", "Glu-", "Glu+"),
+#' "B" = c("Glu+", "Glu+", "Glu-", "Glu-"),
+#' "C" = c("Glu+", "Glu+", "Glu-", "Glu-"))
+#'
+#' ## Applying MultiBaC
+#' Corrected_Matrices <- MultiBaC (inputData, test.comp = 5,
+#' cond.factor = cond.factor, commonOmic = "RNA")}
+#'
 MultiBaC <- function(ListOfBatches, test.comp, cond.factor,
                      commonOmic = 1,
                      scale = FALSE, center = TRUE,
                      showplot = TRUE, crossval = NULL,
-                     Fac = NULL,
-                     nm = FALSE) {
+                     Fac = NULL) {
   # Input data structure ------------------------------------------------------
-  # do.call(inputeval, args = list(ListOfBatches = ListOfBatches,
-  #                                test.comp = test.comp, cond.factor = cond.factor,
-  #                                scale = scale, center = center,
-  #                                showplot = showplot,
-  #                                Fac = Fac))
-
-  if ( inherits(ListOfBatches[[1]], "MultiAssayExperiment") ) {
-
-    inputList <- list()
-
-    for ( i in seq_along(names(ListOfBatches)) ) {
-      inputList[[names(ListOfBatches)[i]]] <- ListOfBatches[[names(ListOfBatches)[i]]]@ExperimentList
-    }
-
-    returnMultiAssay = TRUE
-
-  } else {
-    if ( is.null(cond.factor) ) {
-      stop("cond.factor = NULL but a value is needed")
-    }
-    inputList <- ListOfBatches
-    returnMultiAssay = FALSE
+  if (is.null(names(ListOfBatches))) {
+    stop ("Stop at input evaluation: Elements in ListOfBatches must be named")
   }
-  # browser()
+  #inputList <- getData(ListOfBatches)
+
   # Create PLS models ---------------------------------------------------------
   message("1: Create PLS models")
+
+  aux.1 <- genModelList(ListOfBatches, test.comp = test.comp,
+                            scale = scale, center = center,
+                            crossval = crossval, commonOmic = commonOmic)
+  modelList <- aux.1$modelList
+  q2ofmodels <- aux.1$q2ofmodels
+
+  # Generate missing omics ----------------------------------------------------
+  message("2: Generating missing omics")
+  multiBatchDesign <- genMissingOmics(ListOfBatches, modelList, commonOmic)
+
+  # Batch effect correction using ARSyN ---------------------------------------
+  message("3: Batch effect correction using ARSyN")
+
+  # Correction step
+  aux.2 <- batchCorrection (multiBatchDesign, cond.factor, Fac)
+  correctedOmics <- aux.2$correctedOmics
+  ascamodels <- aux.2$ascamodels
+
+  # Q2 and explained batch-related variability plots ---------------------------
+  if(showplot) {
+    MultiBaC_plots (q2ofmodels, ascamodels)
+  }
+
+
+  # Preparing results ----------------------------------------------------------
+  output <- ListOfBatches
+  for (lab in names(ListOfBatches)) {
+    for ( omic in names(ListOfBatches[[lab]]@ExperimentList)) {
+      output[[lab]]@ExperimentList[[omic]] <- correctedOmics[[lab]][[omic]]
+    }
+  }
+
+
+  return(
+    #multibacClass(
+      c(#"ListOfCorrectedBatches" = output,
+          lapply(output, function(x) x))
+    #)
+  )
+}
+
+#' genModelList
+#'
+#' @param ListOfBatches A list. Object returned by inputData function.
+#' @param test.comp Maximum number of components allowed in PLS models.
+#' @param scale TRUE or FALSE. Whether X and Y matrices have to be scaled
+#' @param center TRUE or FALSE. Whether X and Y matrices have to be centered
+#' @param crossval Integer: number of cross-validation segments. The number of samples (rows of 'x') must be at least >= crossvalI.
+#' If NULL (default) leave-one-out crossvalidation is performed
+#' @param commonOmic Name or index of the commonOmic between the batches. If the index is given, the common data matrix must be in the same possition in each batch.
+#'
+#' @return A list with two slots:
+#' \enumerate {
+#'  \item {modelList: A list of PLS models.}
+#'  \item {q2ofmodels: A list. Each slot contains a vector of Q^2 values of a PLS model.}
+#' }
+#' @export
+#'
+#' @examples
+genModelList <- function(ListOfBatches, test.comp, scale = FALSE, center = TRUE,
+                         crossval = NULL, commonOmic = 1) {
+  # Get matrices ---------------------------------------------------------------
+  inputList <- getData(ListOfBatches)
+
+  # Create models --------------------------------------------------------------
   modelList <- list()
   q2ofmodels <- list()
   for ( i in names(inputList)) {
     message(paste0("\t - Model for batch ",i))
     aux <- createPLSmodel(inputList[[i]], test.comp = test.comp, messages = FALSE,
-                          it = it, tol = tol, scale = scale, center = center,
+                          scale = scale, center = center,
                           crossval, commonOmic)
     modelList[[i]] <- aux[1]
     q2ofmodels[[i]] <- aux[[2]]
   }
 
-  # Generate missing omics ----------------------------------------------------
-  message("2: Generating missing omics")
+  return (list("modelList" = modelList, "q2ofmodels" = q2ofmodels))
+}
+
+#' genMissingOmics
+#'
+#' @param ListOfBatches A list. Object returned by inputData function
+#' @param modelList A list of PLS models. Oject returned by genModelList function
+#' @param commonOmic Name or index of the commonOmic between the batches. If the index is given, the common data matrix must be in the same possition in each batch.
+#'
+#' @return A type list object.
+#' @export
+#'
+#' @examples
+genMissingOmics <- function(ListOfBatches, modelList, commonOmic) {
+
+  # Get matrices ---------------------------------------------------------------
+  inputList <- getData(ListOfBatches)
+
+  # Generate missing omics -----------------------------------------------------
   missingOmics <- inputList
   for ( i in seq_along(inputList) ) {
     aux <- names(inputList)[-i]
     predictedOmics <- list()
     for ( n in aux ) {
       for ( j in seq_along(modelList[[n]])) {
-        Ohat <- predict(modelList[[n]][[j]], newdata = t(inputList[[i]][[commonOmic]]))
+        Ohat <- ropls::predict(modelList[[n]][[j]], newdata = t(inputList[[i]][[commonOmic]]))
         predictedOmics[[names(modelList[[n]])[j]]] <- t(Ohat)
       }
     }
     missingOmics [[names(inputList)[i]]] <-  predictedOmics
   }
 
-  # Batch effect correction using ARSyN ---------------------------------------
-  message("3: Batch effect correction using ARSyN")
-  omics_to_correct <- list()
+  # Creating omic blocks to correct --------------------------------------------
+  multiBatchDesign <- inputList
+  for ( i in seq_along(inputList) ) {
+    multiBatchDesign[[i]] <- c(inputList[[i]], missingOmics[[i]])
+  }
+  return(multiBatchDesign)
+}
+
+#' Title
+#'
+#' This function is to create a list object to be used by MultiBaC function from a set of matrix R objects.
+#'
+#' @param ... Matrices (features x samples) sepated by comma.
+#' @param batches A vector or type factor. Indicates which batch each input matrix belongs to.
+#' @param omicNames The names of input omics.
+#' @param batchesNames The names of the different batches,
+#'
+#' @return A list containing one slot for each batch. Each slot contains a MultiAssayExperiment class object with the corresponding omics included.
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' #' ## Using example data provided by MultiBaC package
+#' data(example)
+#' inputData <- readData(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par, batches = c(1,1,2,2,3,3),
+#' omicNames = c("RNA", "GRO", "RNA", "RIBO", "RNA", "PAR"),
+#' batchesNames = c("A", "B", "C"))
+#' }
+inputData <- function(..., batches, omicNames, batchesNames) {
+  inputOmics <- list(...)
+  omicList <- sapply(unique(batches), function(x) {
+    aux.list <- inputOmics[which(batches==x)]
+    names(aux.list) <- omicNames[which(batches==x)]
+    MultiAssayExperiment::MultiAssayExperiment(aux.list)
+  })
+
+  names(omicList) <- batchesNames
+  omicList
+}
+
+#' batchCorrection
+#'
+#' This function performs the ARSyN correction for each omic contained in mulBatchDesign input object.
+#'
+#' @param multiBatchDesign A list containing the original and predicted omic for each batch. All omics must be present in every batch. Output object of genMissingOmics function
+#' @param Fac Vector with numbers of components to extract in each submodel, by order:
+#' \enumerate{
+#'     \item Model a (time)
+#'     \item Model b (second factor)
+#'     \item Model c (third factor)
+#'     \item Model ab (interaction) to not consider interations set to 0
+#'     \item Model ac (interaction) to not consider interations set to 0
+#'     \item Model bc (interaction) to not consider interations set to 0
+#'     \item Model abc (interaction) to not consider interations set to 0
+#'     \item Number components of residues
+#' }
+#' If NULL (default) the function optimize each value.
+#' @param cond.factor
+#'
+#' @return A list with tow slots. The first one, "correctedOmics", has the same structure than multiBatchDesign input object, but containing corrected information.
+#' The second slot contains a list with the batch effect estimation of each omic.
+#' @export
+#'
+#' @examples
+batchCorrection <- function(multiBatchDesign, cond.factor, Fac = NULL) {
 
   # Making model matrices
   cond_factor <- c()
@@ -128,201 +260,10 @@ MultiBaC <- function(ListOfBatches, test.comp, cond.factor,
   cond_matrix <- model.matrix(~ 0 + factor(cond_factor))
 
   batch_factor <- c()
-  for ( i in seq_along(inputList) ) {
-    batch_factor <- c(batch_factor, rep(i, dim(inputList[[i]][[1]])[2]))
+  for ( i in seq_along(multiBatchDesign) ) {
+    batch_factor <- c(batch_factor, rep(i, dim(multiBatchDesign[[i]][[1]])[2]))
   }
   batch_matrix <- model.matrix(~ 0 + factor(batch_factor))
-
-  # Creating omic blocks to correct
-  multiBatchDesign <- inputList
-  for ( i in seq_along(inputList) ) {
-    multiBatchDesign[[i]] <- c(inputList[[i]], missingOmics[[i]])
-  }
-
-  # Applying ARSyN
-  if (is.null(Fac)) {
-    Fac <- c(ncol(cond_matrix)-1, ncol(batch_matrix)-1,
-             (ncol(cond_matrix)*ncol(batch_matrix))-1,
-             1)
-  }
-
-  # Correction step
-  output.aux <- batchCorrection (multiBatchDesign, cond_matrix,
-                                     batch_matrix, Fac)
-  correctedOmics <- output.aux$correctedOmics
-  ascamodels <- output.aux$ascamodels
-
-  # Q2 and explained batch-related variability plots --------------------------
-  if(showplot) {
-    MultiBaC_plots (q2ofmodels, ascamodels, test.comp)
-  }
-
-
-  # Preparing results
-  if (returnMultiAssay) {
-    output <- ListOfBatches
-    for (lab in names(ListOfBatches)) {
-      for ( omic in names(ListOfBatches[[lab]]@ExperimentList)) {
-        output[[lab]]@ExperimentList[[omic]] <- correctedOmics[[lab]][[omic]]
-      }
-    }
-  } else {
-    output <- inputList
-    for ( lab in seq_along(names(inputList))) {
-      for ( omic in seq_along(names(inputList[[lab]]))) {
-        output[[lab]][[omic]] <- correctedOmics[[lab]][[omic]]
-      }
-    }
-  }
-
-
-  return(
-    multibacClass(
-      list("ListOfCorrectedBatches" = output,
-           "batchMagnitudePlot" = batchEstimation(output,
-                                                  batch_factor, commonOmic))
-    )
-  )
-}
-
-
-#' createPLSmodel
-#'
-#' @param X matrix of predictor variables
-#' @param Y matrix of response variables
-#' @param test.comp maximum number of latent variables (or components) to test
-#' @param it maximum number of iterations allowed for nipals algorithm
-#' @param tol threshold value to validate nipals algorithm convergence
-#' @param scale TRUE or FALSE. Whether X and Y matrices have to be scaled
-#' @param center TRUE or FALSE. Whether X and Y matrices have to be centered
-#' @param plot TRUE or FALSE. Whether to plot Q^2 across components.
-#'
-#' @return Instance of class "opls"
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' }
-createPLSmodel <- function(omicslist, test.comp, it = 50, messages = TRUE,
-                           tol = 1e-08, scale = FALSE, center = TRUE,
-                           crossval, commonOmic) {
-  # Set preprocessing -----------------------------------------------------------
-  if ( center == FALSE & scale == FALSE) {
-    pret <- "none"
-  } else if (center == TRUE & scale == FALSE) {
-    pret <- "center"
-  } else {
-    pret <- "standard"
-  }
-
-  # Set crossval ----------------------------------------------------------------
-  if (is.null(crossval)) {
-    crossval <- dim(t(omicslist[[1]]))[1]
-  }
-
-  # Set test.comp ---------------------------------------------------------------
-  max.comp <- min(dim(omicslist[[1]])) - 1
-  if ( test.comp > max.comp ) {
-    message(paste0("Input test.comp exceeds the minimum dimension of data matrix. test.comp set to ", max.comp))
-    test.comp <- max.comp
-  }
-
-  # Create models ---------------------------------------------------------------
-  models <- list()
-  for ( i in seq_along(names(omicslist))[-commonOmic]) {
-
-    # COmpute Q2 ------------------------------------------------------------------
-    plsModel <- ropls::opls(t(omicslist[[commonOmic]]), t(omicslist[[i]]),
-                            predI = test.comp, printL=FALSE, plotL = FALSE,
-                            crossvalI = dim(t(omicslist[[1]]))[1], scaleC = pret)
-    q2v <- plsModel@modelDF$`Q2(cum)`
-
-    # Built final model -----------------------------------------------------------
-    plsModel <- ropls::opls(t(omicslist[[1]]), t(omicslist[[i]]),
-                            predI = which(q2v == max(q2v)), printL=FALSE, plotL = FALSE,
-                            crossvalI = dim(t(omicslist[[1]]))[1], scaleC = pret)
-    models[[(i-1)]] <- plsModel
-  }
-  names(models) <- names(omicslist)[-1]
-  return(c(models, data.frame(q2v)))
-}
-
-
-#' MultiBaC_plot
-#'
-#' @param modelList
-#' @param ascamodels
-#'
-#' @return
-#' @export
-#'
-#' @examples
-MultiBaC_plots <- function(q2values, ascamodels, test.comp) {
-  initpar <- par(c("mfrow"))
-  on.exit(par(mfrow = initpar))
-  par(mfrow = c(1,2), xpd = TRUE)
-
-  # Q2 plot -------------------------------------------------------------------
-
-  pallete <- colors()[c(11,17,51,56,29,512,97,653,136,24)]
-
-  # Make plot
-  plot(1:3,1:3, type = "n", pch = 19,
-       ylim = c(min(unlist(q2values)),1), xaxt = "n",
-       xlim = c(1,test.comp), xlab="Number of Components", ylab = "Squared Q value",
-       main = "Squared Q plot", bty = "n",
-       cex.lab = 1.25, cex.axis = 1.25, font.lab = 2, cex.main=1.5)
-  for ( i in seq_along(q2values)) {
-    lines(1:length(q2values[[i]]), q2values[[i]], type = "b", pch = 19, col = pallete[i])
-  }
-  axis(1, seq_len(test.comp), c(seq_len(test.comp)), cex.axis = 1.25)
-  legend(3, 0.5,
-         bty = "n", title = expression(underline(Batches)),
-         legend = c(names(q2values)),
-         col = c(pallete),
-         cex = 1.5, lty = c(1,1), pch = c(19,19))
-
-  # Explained batch-related variability plot ----------------------------------
-  plot(c(0,0), type = "n", pch = 19,
-       ylim = c(0,100), xaxt = "n",
-       xlim = c(0,test.comp), xlab="Number of Components",
-       ylab = "Explained batch-related variability (%)",
-       main = "ARSyN nº of components", bty = "n",
-       cex.lab = 1.25, cex.axis = 1.25, font.lab = 2, cex.main=1.5)
-  pallete <- colors()[c(11,17,51,56,29,512,97,653,136,24)]
-
-  for ( i in seq_along(ascamodels)) {
-    lines(0:(length(ascamodels[[1]])-1),
-          c(ascamodels[[i]]*100),
-          type = "b", pch = 19, col = pallete[i])
-  }
-
-  axis(1, 0:(length(ascamodels[[1]])-1), 0:(length(ascamodels[[1]])-1), cex.axis = 1.25)
-  legend(0.8, 50,
-         bty = "n", title = expression(underline(Omics)),
-         legend = c("common","non-common: ", names(ascamodels)[-1]),
-         col = c(pallete[1], "white", pallete[2:4]),
-         cex = 1.5, lty = c(1,0,rep(1,length(ascamodels)-1)), pch = rep(19,length(ascamodels)+1))
-
-  # Advertising about superposition
-  if (sum(ascamodels[[1]] == ascamodels[[2]])) {
-    message("Caution: Explained variance could be similar for more than two omics. Thus lines and dots could be superpossed")
-  }
-}
-
-
-#' Title
-#'
-#' @param cond_matrix
-#' @param batch_matrix
-#' @param multiBatchDesign
-#'
-#' @return
-#' @export
-#'
-#' @examples
-batchCorrection <- function(multiBatchDesign, cond_matrix,
-                             batch_matrix, Fac) {
 
   # Defining Fac
   if (is.null(Fac)) {
@@ -341,8 +282,8 @@ batchCorrection <- function(multiBatchDesign, cond_matrix,
       Xunfold <- rbind(Xunfold, t(multiBatchDesign[[lab]][[omic]]))
       set_lims <- c(set_lims, (set_lims[length(set_lims)])+dim(t(multiBatchDesign[[lab]][[omic]]))[1])
     }
-    asca <- ASCA.2f(Xunfold, Designa = cond_matrix, Designb = batch_matrix,
-                    Fac = c(1,2,5,2), type = 2, showvar = FALSE, showscree = FALSE)
+    asca <- MultiBaC::ASCA.2f(Xunfold, Designa = cond_matrix, Designb = batch_matrix,
+                              Fac = c(1,2,5,2), type = 2, showvar = FALSE, showscree = FALSE)
     Xunfold.r <- Xunfold - asca$Model.b$TP - asca$Model.ab$TP #- asca$Model.res$TP
     ascamodels[[omic]] <- c(0,asca$Model.b$var.exp[,2])
 
@@ -350,10 +291,103 @@ batchCorrection <- function(multiBatchDesign, cond_matrix,
       correctedOmics[[names(multiBatchDesign)[i]]][[omic]] <- t(Xunfold.r[(set_lims[i]+1):(set_lims[i+1]),])
     }
   }
+
   return (list("correctedOmics" = correctedOmics,
                "ascamodels" = ascamodels))
 }
 
+#' batchEstPlot
+#'
+#' This function uses linear models to estimate the batch effect magnitude using the common data across batches. It compares
+#' the result with theoretical distribution of diferrent levels of batch magnitude.
+#'
+#' @param ListOfBatches A list. Object returned by inputData function.
+#' @param commonOmic Name or index of the commonOmic between the batches. If the index is given, the common data matrix must be in the same possition in each batch.
+#'
+#' @return An object of class ggplot.
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' #' ## Using example data provided by MultiBaC package
+#' data(example)
+#' inputData <- readData(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par, batches = c(1,1,2,2,3,3),
+#' omicNames = c("RNA", "GRO", "RNA", "RIBO", "RNA", "PAR"),
+#' batchesNames = c("A", "B", "C"))
+#'
+#' batchEstPlot(inputData, commonOmic = 1)
+#' }
+batchEstPlot <- function(ListOfBatches, commonOmic) {
+
+  initpar <- par(c("mai", "pin", "xpd"))
+  mai <- c(initpar$mai[1:3], initpar$pin[2]-0.15)
+  on.exit(par(mai = initpar$mai, xpd = initpar$xpd))
+  par(mai = mai)
+
+  # Input Data Structure -------------------------------------------------------
+  inputList <- getData(ListOfBatches)
+
+  # Extract common omic --------------------------------------------------------
+  Xunfold <- NULL
+  for ( lab in seq_along(inputList)) {
+    Xunfold <- rbind(Xunfold, t(inputList[[lab]][[commonOmic]]))
+  }
+
+  # Create batch factor --------------------------------------------------------
+  batch_factor <- c()
+  for ( i in seq_along(inputList) ) {
+    batch_factor <- c(batch_factor, rep(i, dim(inputList[[i]][[1]])[2]))
+  }
+
+  # Calculate Overall Mean -----------------------------------------------------
+
+  offset<-apply(Xunfold,2,mean)
+  Xoff<-Xunfold-(cbind(matrix(1,nrow=nrow(Xunfold),ncol=1))%*%rbind(offset))
+
+  # Compute coefficients -------------------------------------------------------
+
+  design.matrix <- model.matrix(~ factor(batch_factor))
+  #
+  design.matrix[which(design.matrix==0)] <- -1
+  #
+  beta.hat <- solve(t(design.matrix)%*%design.matrix) %*% t(design.matrix) %*% Xoff
 
 
+
+  # Theoretical distributions --------------------------------------------------
+
+  beta.hat_v <- as.vector(t(beta.hat))
+
+  reg_v <- c()
+  for ( i in 1:(length(beta.hat_v)/dim(beta.hat)[2])) {
+    reg_v <- c(reg_v, rep(i,dim(beta.hat)[2]))
+  }
+
+  toplot <- data.frame("Coef" = factor(reg_v[(dim(beta.hat)[2]+1):length(beta.hat_v)]),
+                       "Values" = beta.hat_v[(dim(beta.hat)[2]+1):length(beta.hat_v)])
+
+
+  p <- ggplot(toplot, aes(x=Coef, y=Values)) +
+    geom_violin() +
+    labs(title="Batch Magnitude Plot", x = "Batch: 1 as reference", y = "Coefficients per Gene", size=2) +
+    scale_fill_brewer(palette="Blues") +
+    #geom_dotplot(binaxis='y', stackdir='center', dotsize=0.5) +
+    theme_classic() +
+    theme(axis.text=element_text(size=18),
+          title=element_text(size=16,face="bold"),
+          legend.text = element_text(size=20),
+          legend.spacing = unit(.25,"cm")) +
+    geom_hline(aes(yintercept=6, col = "High"), lty = 5, show.legend = TRUE) +
+    geom_hline(aes(yintercept=-6, col = "High"), lty = 5,show.legend = TRUE) +
+    geom_hline(aes(yintercept=4, col = "Medium"), lty = 5,show.legend = TRUE) +
+    geom_hline(aes(yintercept=-4, col = "Medium"), lty = 5,show.legend = TRUE) +
+    geom_hline(aes(yintercept=2, col = "Low"), lty = 5,show.legend = TRUE) +
+    geom_hline(aes(yintercept=-2, col = "Low"), lty = 5,show.legend = TRUE) +
+    labs(col = "Theorical
+Batch
+Magnitudes")
+
+  return(p)
+
+}
 

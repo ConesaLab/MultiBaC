@@ -4,33 +4,41 @@
 \alias{createPLSmodel}
 \title{createPLSmodel}
 \usage{
-createPLSmodel(X, Y, test.comp, it = 50, messages = TRUE,
-  tol = 1e-08, scale = FALSE, center = TRUE, plot = TRUE)
+createPLSmodel(omicslist, test.comp, messages = TRUE, scale = FALSE,
+  center = TRUE, crossval, regressor)
 }
 \arguments{
-\item{X}{matrix of predictor variables}
-
-\item{Y}{matrix of response variables}
+\item{omicslist}{A list of length 2. Each slot must contain a data matrix (features x samples).}
 
 \item{test.comp}{maximum number of latent variables (or components) to test}
 
-\item{it}{maximum number of iterations allowed for nipals algorithm}
-
-\item{tol}{threshold value to validate nipals algorithm convergence}
+\item{messages}{If TRUE, messages about the algorithm steps will be displayed in console window.}
 
 \item{scale}{TRUE or FALSE. Whether X and Y matrices have to be scaled}
 
 \item{center}{TRUE or FALSE. Whether X and Y matrices have to be centered}
 
-\item{plot}{TRUE or FALSE. Whether to plot Q^2 across components.}
+\item{crossval}{Integer: number of cross-validation segments. The number of samples (rows of 'x') must be at least >= crossvalI.
+If NULL (default) leave-one-out crossvalidation is performed}
+
+\item{regressor}{Integer (1 or 2): Which of the matrices is the X matrix for PLS model.}
 }
 \value{
-Instance of class "plsClass"
+Instance of class "opls". See package ropls. The final model has the optimal number of components used for prediction.
 }
 \description{
-createPLSmodel
+This function creates a PLS model between two omics data matrices. It also performs an optimization of the
+number of component of the model that maximize the Q^2 as a measure of prediction performance.
 }
 \examples{
 \dontrun{
+## Using example data provided by MultiBaC package
+data(example)
+
+omicsList <- list("RNA" = A.rna, "GRO" = A.gro)
+
+## Create model
+plsModel <- createPLSmodel(omicsList, crossval = NULL, test.comp = 3,
+scale = FALSE, center = TRUE, regressor = 1)
 }
 }

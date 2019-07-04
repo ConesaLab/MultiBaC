@@ -6,26 +6,27 @@
 \alias{MultiBaC-package}
 \title{MultiBaC}
 \usage{
-MultiBaC(X, YZ, test.comp, cond.factor, it = 50, tol = 1e-08,
-  scale = FALSE, center = TRUE, showplot = TRUE, Fac = NULL,
-  nm = FALSE)
+MultiBaC(ListOfBatches, test.comp, cond.factor, commonOmic = 1,
+  scale = FALSE, center = TRUE, showplot = TRUE, crossval = NULL,
+  Fac = NULL)
 }
 \arguments{
-\item{X}{list of common omics}
-
-\item{YZ}{list of non-common omics}
+\item{ListOfBatches}{A list. Object returned by inputData function.}
 
 \item{test.comp}{maximum number of components allowed}
 
-\item{cond.factor}{list of experimental design conditions for each lab}
+\item{cond.factor}{A list with one slot for each batch containing the common experimental setting.}
 
-\item{it}{maximum number of iterations allowed for nipals algorithm}
-
-\item{tol}{threshold value to validate nipals algorithm convergence}
+\item{commonOmic}{Name or index of the commonOmic between the batches. If the index is given, the common data matrix must be in the same possition in each batch.}
 
 \item{scale}{TRUE or FALSE. Whether X and Y matrices have to be scaled}
 
 \item{center}{TRUE or FALSE. Whether X and Y matrices have to be centered}
+
+\item{showplot}{If TRUE, the Q^2 and the Fac optimization will be plotted.}
+
+\item{crossval}{Integer: number of cross-validation segments. The number of samples (rows of 'x') must be at least >= crossvalI.
+If NULL (default) leave-one-out crossvalidation is performed}
 
 \item{Fac}{Vector with numbers of components to extract in each submodel, by order:
 \enumerate{
@@ -37,30 +38,33 @@ MultiBaC(X, YZ, test.comp, cond.factor, it = 50, tol = 1e-08,
     \item Model bc (interaction) to not consider interations set to 0
     \item Model abc (interaction) to not consider interations set to 0
     \item Number components of residues
-}}
-
-\item{nm}{TRUE or FALSE. Whether to compute a final step to improve batch correction.}
-
-\item{estBatchmagnitude}{TRUE or FALSE. Whether to show an estimation of batch effect magnitude or not}
-
-\item{type}{Vector indicating whether the analyses of the model of the factors that interact with time (b.ab and c.ac) are studied jointly(1) or separately(2).}
-
-\item{showvar}{Show variability associated to each model or not.}
-
-\item{showscree}{Show a screenplot.}
+}
+If NULL (default) the function optimize each value.}
 }
 \value{
-A list with two slots
-#' \describe{
-    \item{X.star}{List of common omics matrices corrected}
-    \item{YZ.star}{List of non-common omics matrices corrected}
-}
+A list with as many slots as the given number of batches.
+Returns the same structure than the input data "ListOfBatches" but with batch-corrected data.
 }
 \description{
 Description
+
+MultiBaC performs a multi-omic, multi-batch correction
 }
 \examples{
-Corrected_Matrices <- MultiBaC ( X = list("A" = rnaseq_a, "B" = rnaseq_b),
-                                 YZ = list("A" = chipseq_a, "B" = metabolomics_b),
-                                 test.comp = 3, cond.factor = design)
+\dontrun{
+## Using example data provided by MultiBaC package
+data(example)
+inputData <- readData(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par, batches = c(1,1,2,2,3,3),
+omicNames = c("RNA", "GRO", "RNA", "RIBO", "RNA", "PAR"),
+batchesNames = c("A", "B", "C"))
+
+## Creating cond.factor
+cond.factor = list("A" = c("Glu+", "Glu+", "Glu+", "Glu-", "Glu-", "Glu+"),
+"B" = c("Glu+", "Glu+", "Glu-", "Glu-"),
+"C" = c("Glu+", "Glu+", "Glu-", "Glu-"))
+
+## Applying MultiBaC
+Corrected_Matrices <- MultiBaC (inputData, test.comp = 5,
+cond.factor = cond.factor, commonOmic = "RNA")}
+
 }

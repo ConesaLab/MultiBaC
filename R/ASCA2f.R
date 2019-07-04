@@ -39,9 +39,9 @@ NULL
 #'
 #' @examples
 #'
-#' my.asca <- ASCA.2f(X = t(data.example), Designa = Designa,
-#'     Designb = Designb, Designc = NULL, Fac = c(1,2,2,2), type= 1)
-ASCA.2f<-function(X = X,Designa = Designa, Designb = Designb, Designc = NULL,
+#' \dontrun{my.asca <- ASCA.2f(X = t(data.example), Designa = Designa,
+#'     Designb = Designb, Designc = NULL, Fac = c(1,2,2,2), type= 1)}
+ASCA.2f<-function(X = X, Designa = Designa, Designb = Designb, Designc = NULL,
                   Fac = c(1,2,2,2), type = 1, showvar = TRUE, showscree = TRUE) {
 #--------------------------------------------------------------------------------------
 #  Dimensions of the matrices:

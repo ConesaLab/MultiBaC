@@ -8,7 +8,173 @@ vignette: >
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, fig.width = 7, fig.height = 5)
+```
+
+We will use a reduced multi omic design combining four different omic data types from three different laboratories. 
+
+```{r, include=TRUE}
+library(MultiBaC)
+data(multiyeast)
+```
+
+Up to six matrices are loaded. The initial capital letter is the study followed by the omic name in ower case.
+
+# Input Data
+
+MultiBaC requires a list of multi omic designs. As Bioconductor recomends, we use MultiAssayExperiment object type to store multi omics studies. Hence, the input of MultiBaC is a list of MultiAssayExperiment objects. The package contains a function to built the input object from a set of matrices or data.frame objects. The correct orientation for input matrices is features x samples. The following example shows part of the expression data for study A:
+
+```{r, include=TRUE}
+head(A.rna)
+```
+
+In order to pack the matrices in a MultiAssayExperiment object, we have implemented inputData function. An example on how it works is shown below:
+
+```{r, include=TRUE}
+input <- inputData (A.rna, A.gro, B.rna, B.ribo, C.rna, C.par, 
+                    batches = c(1,1,2,2,3,3),
+                    omicNames = c("RNA", "GRO", "RNA", "RIBO", "RNA", "PAR"), 
+                    batchesNames = c("A", "B", "C"))
+```
+
+The inputData function can incorporate as many omic matrices as needed. Furthermore, the function has three mandatory arguments: batches, omicNames and batchesNames. 
+
++ batches: Could be a class vector or factor object. It must indicate which input matrices belong to the same study or lab.
++ omicNames: Contains the names of each input matrix. 
++ batchesNames: The function returns a list with as many slots as number of batches. This vector contains the name of each batch which are the names of the different slots of the returned list.
+
+input is a list with the structure showed in the picture bellow:
+
+![Structure of input object](inputObject.png)
+
+Once input object is created, MultiBaC function can be performed. 
+
+```{r, include=TRUE}
+batchEstPlot(input, commonOmic = 1)
+```
+
+```{r, include = TRUE}
+# Create a global matrix
+inData <- t(cbind(A.rna, B.rna, C.rna, A.gro, B.ribo, C.par))
+
+# Generate PCA analysis
+pc <- ropls::opls(inData, predI = 2, scaleC = "center", plotL = FALSE, printL = FALSE)
+
+# Plot PCA
+plot(pc@scoreMN,
+     xlab = paste0("PC 1: ",
+                   pc@modelDF$`R2X(cum)`[1]*100, " %"),
+     ylab = paste0("PC 2: ",
+                   pc@modelDF$`R2X(cum)`[2]*100, " %"),
+     # pch = omic; fill = condition
+     pch = c(19,19,19,1,1,1,19,19,1,1,19,19,1,1, # RNA
+             15,15,15,0,0,0, # GRO
+             17,17,2,2, # RIBO
+             18,18,5,5),# PAR
+     # col = batch
+     col = rep(c(rep("brown", 6),
+                 rep("dodgerblue2", 4),
+                 rep("forestgreen", 4)),2),
+     # other arguments
+     asp = 1, cex.axis = 1.3, cex.lab = 1.2, cex = 1.7, bty = "L",
+     main = "Scoreplot of corrected data sets", cex.main = 1.7,
+     xlim = c(-30, 70), ylim = c(-20,20))
+abline(v = 0, lty = 5, col = "gray", xpd = FALSE)
+abline(h = 0, lty = 5, col = "gray", xpd = FALSE)
+legend("topright", legend = c("Shape: Omic",
+                             "RNA", "GRO", "RIBO", "PAR",
+                             "Fill: Condition",
+                             "Glu +", "Glu -",
+                             "Color: Batch",
+                             "Batch A", "Batch B", "Batch C"),
+       col = c("white", rep(1, 4),
+               "white", 1, 1,
+               "white", "brown", "dodgerblue2", "forestgreen"),
+       pch = c(0, 19, 15, 17, 18,
+               0, 19, 1,
+               0, 15, 15, 15), cex = 1.4, bty = "o")
+```
+
+```{r, include=TRUE}
+cond.factor = list("A" = c("Glu+", "Glu+", "Glu+", "Glu-", "Glu-", "Glu+"),
+                   "B" = c("Glu+", "Glu+", "Glu-", "Glu-"),
+                   "C" = c("Glu+", "Glu+", "Glu-", "Glu-"))
+```
+
+```{r, include=TRUE}
+res <- MultiBaC(input, test.comp = 5, cond.factor = cond.factor)
+```
+
+The output object has the same structure than the input element. 
+
+```{r, include=TRUE}
+# Extract corrected matrices
+A.rnacor <- res$A@ExperimentList$RNA
+B.rnacor <- res$B@ExperimentList$RNA
+C.rnacor <- res$C@ExperimentList$RNA
+A.grocor <- res$A@ExperimentList$GRO
+B.ribocor <- res$B@ExperimentList$RIBO
+C.parcor <- res$C@ExperimentList$PAR
+
+# Create a global matrix
+outData <- t(cbind(A.rnacor, B.rnacor, C.rnacor, A.grocor, B.ribocor, C.parcor))
+
+# Generate PCA analysis
+pc <- ropls::opls(outData, predI = 2, scaleC = "center", plotL = FALSE, printL = FALSE)
+
+# Plot PCA
+plot(pc@scoreMN,
+     xlab = paste0("PC 1: ",
+                   pc@modelDF$`R2X(cum)`[1]*100, " %"),
+     ylab = paste0("PC 2: ",
+                   pc@modelDF$`R2X(cum)`[2]*100, " %"),
+     # pch = omic; fill = condition
+     pch = c(19,19,19,1,1,1,19,19,1,1,19,19,1,1, # RNA
+             15,15,15,0,0,0, # GRO
+             17,17,2,2, # RIBO
+             18,18,5,5),# PAR
+     # col = batch
+     col = rep(c(rep("brown", 6),
+                 rep("dodgerblue2", 4),
+                 rep("forestgreen", 4)),2),
+     # other arguments
+     asp = 1, cex.axis = 1.3, cex.lab = 1.2, cex = 1.7, bty = "L",
+     main = "Scoreplot of corrected data sets", cex.main = 1.7,
+     xlim = c(-30, 50), ylim = c(-20,20))
+abline(v = 0, lty = 5, col = "gray", xpd = FALSE)
+abline(h = 0, lty = 5, col = "gray", xpd = FALSE)
+legend("topright", legend = c("Shape: Omic",
+                             "RNA", "GRO", "RIBO", "PAR",
+                             "Fill: Condition",
+                             "Glu +", "Glu -",
+                             "Color: Batch",
+                             "Batch A", "Batch B", "Batch C"),
+       col = c("white", rep(1, 4),
+               "white", 1, 1,
+               "white", "brown", "dodgerblue2", "forestgreen"),
+       pch = c(0, 19, 15, 17, 18,
+               0, 19, 1,
+               0, 15, 15, 15), cex = 1.4, bty = "o")
 ```
 
 
+We are able to repeat the whole process but by separated steps.
+
+1. Creating models:
+
+```{r, include=TRUE}
+modelList <- genModelList(input, test.comp = 5)$modelList
+```
+
+2. Generate missing omics:
+
+```{r, include=TRUE}
+missingOmics <- genMissingOmics(input, modelList, commonOmic = 1)
+```
+
+3. Batch correction:
+
+```{r, include=TRUE}
+res <- batchCorrection(missingOmics, cond.factor)$correctedOmics
+res$A
+```
