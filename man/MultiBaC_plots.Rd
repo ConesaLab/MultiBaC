@@ -12,8 +12,20 @@ MultiBaC_plots(q2values, ascamodels)
 \item{ascamodels}{A list. Each slot contains a vector of cumulative explained variances of the batch estimation.}
 }
 \value{
-Display two plots.
+Displays two plots.
 }
 \description{
-Display two plots summarizing MultiBaC steps.
+Display two plots summarizing MultiBaC steps. Q^2 plot indicates the predictive capacity of each PLS model according to the number of components.
+}
+\examples{
+\dontrun{
+## Simulating inputs
+q2values <- list("model1" = c(0.51, 0.76),
+"model2" = c(0.30, 0.69))
+
+ascamodels <- list("A" = c(50, 79),
+"B" = c(55, 87), "C" = c(70, 90))
+
+MultiBaC_plots (q2values, ascamodels)
+}
 }

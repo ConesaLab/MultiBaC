@@ -1,6 +1,6 @@
-#' A distributed yeast multi-omic dataset.
+#' multiyeast
 #'
-#' The whole dataset is composed by six different matrices containing four different omic technologies collected from three different studies.
+#' A distributed yeast multiomic dataset. The whole dataset is composed by six different matrices containing four different omic technologies collected from three different studies.
 #' Original data were reduced to 200 features.
 #'
 #' @format Six matrices (fetarues x samples):
@@ -13,4 +13,6 @@
 #'   \item{C.par}{Global PAR-CLIP data from lab C}
 #' }
 #' @source Datasets were downloaded from GEO database \url{"https://www.ncbi.nlm.nih.gov/geo/"}
+NULL
+
 "multiyeast"

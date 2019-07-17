@@ -2,7 +2,7 @@
 % Please edit documentation in R/MultiBaC.R
 \name{batchEstPlot}
 \alias{batchEstPlot}
-\title{batchEstimation}
+\title{batchEstPlot}
 \usage{
 batchEstPlot(ListOfBatches, commonOmic)
 }
@@ -10,8 +10,6 @@ batchEstPlot(ListOfBatches, commonOmic)
 \item{ListOfBatches}{A list. Object returned by inputData function.}
 
 \item{commonOmic}{Name or index of the commonOmic between the batches. If the index is given, the common data matrix must be in the same possition in each batch.}
-
-\item{batch_factor}{Class factor indicating the batch of each sample in Xunfold}
 }
 \value{
 An object of class ggplot.
@@ -23,8 +21,8 @@ the result with theoretical distribution of diferrent levels of batch magnitude.
 \examples{
 \dontrun{
 #' ## Using example data provided by MultiBaC package
-data(example)
-inputData <- readData(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par, batches = c(1,1,2,2,3,3),
+data(multiyeast)
+inputData <- inputData(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par, batches = c(1,1,2,2,3,3),
 omicNames = c("RNA", "GRO", "RNA", "RIBO", "RNA", "PAR"),
 batchesNames = c("A", "B", "C"))
 

@@ -5,14 +5,15 @@ NULL
 #'
 #' @param asca Result of ASCA analysis.
 #'
-#' @export
 #'
 #' @examples
-#' \dontrun{my.asca <- ASCA.3f(X = t(data.example), Designa = Designa,
+#' \dontrun{
+#' my.asca <- ASCA.3f(X = t(data.example), Designa = Designa,
 #'     Designb = Designb, Designc = Designc, Fac= c(1, 2, 2, 2, 2, 2, 2, 2),
 #'     type = c(1, 1, 2))
 #'
-#' screeplot(my.asca)}
+#' screeplot(my.asca)
+#' }
 screeplot <- function (asca) {
 
 num <- length(asca)

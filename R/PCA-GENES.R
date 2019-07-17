@@ -12,10 +12,11 @@ NULL
 #'     \item{scores}{}
 #'     \item{loadings}{}
 #' }
-#' @export
 #'
 #' @examples
+#' \dontrun{
 #' my.pca <- PCA.GENES(data.example)
+#' }
 PCA.GENES<-function(X)
 {
 #PCA.GENES is very useful to obtain principal components to a matrix that has more variables than individuals.

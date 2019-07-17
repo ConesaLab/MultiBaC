@@ -35,15 +35,16 @@ NULL
 #'    \item{leverage}{gene leverages for the computed PCA model}
 #'    \item{SPE}{gene SPEs for the computed PCA model}
 #'  }
-#' @export
 #'
 #' @examples
 #'
-#' \dontrun{my.asca <- ASCA.2f(X = t(data.example), Designa = Designa,
-#'     Designb = Designb, Designc = NULL, Fac = c(1,2,2,2), type= 1)}
+#' \dontrun{
+#' my.asca <- ASCA.2f(X = t(data.example), Designa = Designa,
+#'     Designb = Designb, Designc = NULL, Fac = c(1,2,2,2), type= 1)
+#'}
 ASCA.2f<-function(X = X, Designa = Designa, Designb = Designb, Designc = NULL,
                   Fac = c(1,2,2,2), type = 1, showvar = TRUE, showscree = TRUE) {
-#--------------------------------------------------------------------------------------
+# Guidance --------------------------------------------------------------------------------------
 #  Dimensions of the matrices:
 #  X (p x n) contains expression values of n genes (in columns) and p conditions (in rows)
 #  Designa (p x I) contains 0's and 1's for the TIME-POINTS in the experiment

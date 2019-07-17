@@ -22,5 +22,7 @@ A list with elements:
 Function to obtain principal components to a matrix that has more variables than individuals.
 }
 \examples{
+\dontrun{
 my.pca <- PCA.GENES(data.example)
+}
 }

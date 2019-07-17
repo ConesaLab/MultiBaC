@@ -13,9 +13,11 @@ screeplot(asca)
 Show a scree plot of an ASCA analysis
 }
 \examples{
+\dontrun{
 my.asca <- ASCA.3f(X = t(data.example), Designa = Designa,
     Designb = Designb, Designc = Designc, Fac= c(1, 2, 2, 2, 2, 2, 2, 2),
     type = c(1, 1, 2))
 
 screeplot(my.asca)
+}
 }

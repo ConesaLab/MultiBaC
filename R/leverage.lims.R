@@ -21,12 +21,13 @@ NULL
 #'     \item{Cutoff}{}
 #'     \item{Selection}{}
 #' }
-#' @export
 #'
 #' @examples
+#' \dontrun{
 #' leverage.cutoff <- leverage.lims(data = data.example, R = 3, ASCA.3f, Designa = Designa,
 #'     Designb = Designb, Designc = Designc,Fac = c(1,2,2,2,2,2,2,2), type = c(1,1,2),
 #'     alpha = 0.95, showvar = FALSE, showscree = FALSE)
+#'}
 leverage.lims <- function(data = data, R = 100, FUN, Designa = Designa, Designb = Designb, Designc = NULL, Fac = c(1,2,2,2), type = 2, alpha = 0.01, showvar=FALSE, showscree=FALSE)
 {
 ## Compute ASCA model for data

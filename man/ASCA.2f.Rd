@@ -50,6 +50,8 @@ A list containing as many slots as computed models, each one with the following 
 }
 \examples{
 
+\dontrun{
 my.asca <- ASCA.2f(X = t(data.example), Designa = Designa,
     Designb = Designb, Designc = NULL, Fac = c(1,2,2,2), type= 1)
+}
 }

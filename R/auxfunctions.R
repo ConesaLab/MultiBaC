@@ -1,17 +1,14 @@
-#' @import stats
-#' @import graphics
 #' @import ggplot2
-#' @include ASCA3f.R
 NULL
 
 #' MultiBaC_plot
 #'
-#' Display two plots summarizing MultiBaC steps.
+#' Display two plots summarizing MultiBaC steps. Q^2 plot indicates the predictive capacity of each PLS model according to the number of components.
 #'
 #' @param ascamodels A list. Each slot contains a vector of cumulative explained variances of the batch estimation.
 #' @param q2values A list. Each slot contains a vector of Q^2 values of a PLS model.
 #'
-#' @return Display two plots.
+#' @return Displays two plots.
 #'
 #' @examples
 #' \dontrun{
@@ -33,20 +30,20 @@ MultiBaC_plots <- function(q2values, ascamodels) {
 
   # Q2 plot -------------------------------------------------------------------
 
-  pallete <- colors()[c(11,17,51,56,29,512,97,653,136,24)]
+  pallete <- grDevices::colors()[c(11,17,51,56,29,512,97,653,136,24)]
 
   # Make plot
   plot(1:3,1:3, type = "n", pch = 19,
        ylim = c(min(unlist(q2values)),1), xaxt = "n",
-       xlim = c(1,test.comp), xlab="Number of Components", ylab = "Squared Q value",
-       main = "Squared Q plot", bty = "n",
+       xlim = c(1,test.comp+1), xlab="Number of Components", ylab = "Squared Q value",
+       main = "Squared Q plot", bty = "L",
        cex.lab = 1.25, cex.axis = 1.25, font.lab = 2, cex.main=1.5)
   for ( i in seq_along(q2values)) {
     lines(1:length(q2values[[i]]), q2values[[i]], type = "b", pch = 19, col = pallete[i])
   }
   axis(1, seq_len(test.comp), c(seq_len(test.comp)), cex.axis = 1.25)
   legend(test.comp-2, 0.65,
-         bty = "n", title = expression(underline(Batches)),
+         bty = "n", title = "Batches",
          legend = c(names(q2values)),
          col = c(pallete),
          cex = 1.5, lty = c(1,1), pch = c(19,19))
@@ -56,7 +53,7 @@ MultiBaC_plots <- function(q2values, ascamodels) {
        ylim = c(0,100), xaxt = "n",
        xlim = c(0,test.comp), xlab="Number of Components",
        ylab = "Explained batch-related variability (%)",
-       main = "ARSyN nº of components", bty = "n",
+       main = "ARSyN n. of components", bty = "L",
        cex.lab = 1.25, cex.axis = 1.25, font.lab = 2, cex.main=1.5)
   pallete <- colors()[c(11,17,51,56,29,512,97,653,136,24)]
 
@@ -67,11 +64,11 @@ MultiBaC_plots <- function(q2values, ascamodels) {
   }
 
   axis(1, 0:(length(ascamodels[[1]])-1), 0:(length(ascamodels[[1]])-1), cex.axis = 1.25)
-  legend(0.8, 75,
-         bty = "n", title = expression(underline(Omics)),
-         legend = c("common","non-common: ", names(ascamodels)[-1]),
-         col = c(pallete[1], "white", pallete[2:4]),
-         cex = 1.5, lty = c(1,0,rep(1,length(ascamodels)-1)), pch = rep(19,length(ascamodels)+1))
+  legend(length(ascamodels[[1]])-2, 75,
+         bty = "n", title = "Omics",
+         legend = c(names(ascamodels)),
+         col = c(pallete[1], pallete[2:4]),
+         cex = 1.5, lty = rep(1,length(ascamodels)), pch = rep(19,length(ascamodels)))
 
   # Advertising about superposition
   if (sum(ascamodels[[1]] == ascamodels[[2]])) {
@@ -129,20 +126,19 @@ createPLSmodel <- function(omicslist, test.comp, messages = TRUE,
     message(paste0("Input test.comp exceeds the minimum dimension of data matrix. test.comp set to ", max.comp))
     test.comp <- max.comp
   }
-
   # Create models ---------------------------------------------------------------
   models <- list()
   for ( i in seq_along(names(omicslist))[-regressor]) {
 
     # COmpute Q2 ------------------------------------------------------------------
     plsModel <- ropls::opls(t(omicslist[[regressor]]), t(omicslist[[i]]),
-                            predI = test.comp, printL=FALSE, plotL = FALSE,
+                            predI = test.comp, fig.pdfC = NULL, info.txtC = NULL,
                             crossvalI = dim(t(omicslist[[1]]))[1], scaleC = pret)
     q2v <- plsModel@modelDF$`Q2(cum)`
 
     # Built final model -----------------------------------------------------------
     plsModel <- ropls::opls(t(omicslist[[1]]), t(omicslist[[i]]),
-                            predI = which(q2v == max(q2v)), printL=FALSE, plotL = FALSE,
+                            predI = which(q2v == max(q2v))[1], fig.pdfC = NULL, info.txtC = NULL,
                             crossvalI = dim(t(omicslist[[1]]))[1], scaleC = pret)
     models[[(i-1)]] <- plsModel
   }
@@ -152,11 +148,19 @@ createPLSmodel <- function(omicslist, test.comp, messages = TRUE,
 
 #' getData
 #'
-#' @param ListOfBatches A list. Object returned by inputData function.
+#' @param ListOfBatches A list of MultiAssayExperiment elements. Object returned by inputData function.
 #'
 #' @return A list of lists.
 #'
 #' @examples
+#' \dontrun{
+#' ## Using example data provided by MultiBaC package
+#' data(multiyeast)
+#' inputData <- readData(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par, batches = c(1,1,2,2,3,3),
+#' omicNames = c("RNA", "GRO", "RNA", "RIBO", "RNA", "PAR"),
+#' batchesNames = c("A", "B", "C"))
+#'
+#' omicData <- getData (inputData)}
 getData <- function(ListOfBatches) {
   if ( inherits(ListOfBatches[[1]], "MultiAssayExperiment") ) {
 
@@ -168,9 +172,6 @@ getData <- function(ListOfBatches) {
 
 
   } else {
-    if ( is.null(cond.factor) ) {
-      stop("cond.factor = NULL but a value is needed")
-    }
     inputList <- ListOfBatches
   }
   return (inputList)

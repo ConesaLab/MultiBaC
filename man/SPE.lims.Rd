@@ -15,9 +15,11 @@ SPE.lims(my.asca, alpha)
 Find squared prediction error cut-off
 }
 \examples{
+\dontrun{
 my.asca <- ASCA.3f(X = t(data.example), Designa = Designa,
     Designb = Designb, Designc = Designc, Fac= c(1, 2, 2, 2, 2, 2, 2, 2),
     type = c(1, 1, 2))
 
  SPE.cutoff <- SPE.lims(my.asca, alpha = 0.01)
+ }
 }

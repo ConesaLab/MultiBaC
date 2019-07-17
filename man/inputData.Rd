@@ -2,7 +2,7 @@
 % Please edit documentation in R/MultiBaC.R
 \name{inputData}
 \alias{inputData}
-\title{Title}
+\title{inputData}
 \usage{
 inputData(..., batches, omicNames, batchesNames)
 }
@@ -19,13 +19,13 @@ inputData(..., batches, omicNames, batchesNames)
 A list containing one slot for each batch. Each slot contains a MultiAssayExperiment class object with the corresponding omics included.
 }
 \description{
-This function is to create a list object to be used by MultiBaC function from a set of matrix R objects.
+This function creates a list object to be used by MultiBaC function from a set of matrix R objects.
 }
 \examples{
 \dontrun{
 #' ## Using example data provided by MultiBaC package
-data(example)
-inputData <- readData(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par, batches = c(1,1,2,2,3,3),
+data(multiyeast)
+inputData <- inputData(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par, batches = c(1,1,2,2,3,3),
 omicNames = c("RNA", "GRO", "RNA", "RIBO", "RNA", "PAR"),
 batchesNames = c("A", "B", "C"))
 }

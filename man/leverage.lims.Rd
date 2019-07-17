@@ -43,7 +43,9 @@ A list with elements:
 Find leverage (importance of a variable in the PCA model) cut-off
 }
 \examples{
+\dontrun{
 leverage.cutoff <- leverage.lims(data = data.example, R = 3, ASCA.3f, Designa = Designa,
     Designb = Designb, Designc = Designc,Fac = c(1,2,2,2,2,2,2,2), type = c(1,1,2),
     alpha = 0.95, showvar = FALSE, showscree = FALSE)
+}
 }

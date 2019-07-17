@@ -13,7 +13,7 @@ MultiBaC(ListOfBatches, test.comp, cond.factor, commonOmic = 1,
 \arguments{
 \item{ListOfBatches}{A list. Object returned by inputData function.}
 
-\item{test.comp}{maximum number of components allowed}
+\item{test.comp}{maximum number of components allowed in PLS models.}
 
 \item{cond.factor}{A list with one slot for each batch containing the common experimental setting.}
 
@@ -46,15 +46,18 @@ A list with as many slots as the given number of batches.
 Returns the same structure than the input data "ListOfBatches" but with batch-corrected data.
 }
 \description{
-Description
-
 MultiBaC performs a multi-omic, multi-batch correction
+
+MultiBaC is a strategy to correct batch effects from multiomic datasets distributed across different labs or data acquisition events.
+MultiBaC is the first Batch effect correction algorithm that dealing with batch effect correction in multiomics datasets.
+MultiBaC is able to remove batch effects across different omics generated within separate batches provided that at least one common
+omic data type is included in all the batches considered.
 }
 \examples{
 \dontrun{
 ## Using example data provided by MultiBaC package
-data(example)
-inputData <- readData(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par, batches = c(1,1,2,2,3,3),
+data(multiyeast)
+inputData <- inputData(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par, batches = c(1,1,2,2,3,3),
 omicNames = c("RNA", "GRO", "RNA", "RIBO", "RNA", "PAR"),
 batchesNames = c("A", "B", "C"))
 

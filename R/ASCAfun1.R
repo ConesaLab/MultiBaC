@@ -52,7 +52,5 @@ output<-list(XK,sc,ld,ssq,Xa,TPa,Ea,leverage,SPE)
 names(output)<-c("data","scores","loadings","var.exp","X","TP","E","leverage","SPE")
 output
 
-
-
 }
 
