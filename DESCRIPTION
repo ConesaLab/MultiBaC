@@ -8,6 +8,7 @@ Description: MultiBaC is a strategy to correct batch effects from multiomic data
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
+biocViews: Software, StatisticalMethod, PrincipalComponent, DataRepresentation
 Imports: graphics, ggplot2, MultiAssayExperiment, ropls
 Suggests: knitr, rmarkdown
 VignetteBuilder: knitr
