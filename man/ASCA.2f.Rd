@@ -5,8 +5,8 @@
 \title{#' ASCA for 2 experimental factors}
 \usage{
 ASCA.2f(X = X, Designa = Designa, Designb = Designb,
-  Designc = NULL, Fac = c(1, 2, 2, 2), type = 1, showvar = TRUE,
-  showscree = TRUE)
+  Designc = NULL, Fac = c(1, 2, 2), Interaction = TRUE, Variability,
+  beta = 2)
 }
 \arguments{
 \item{X}{Data matrix (p x n) that contains expression values of n genes (in columns) and p conditions (in rows).}
@@ -25,11 +25,11 @@ ASCA.2f(X = X, Designa = Designa, Designb = Designb,
     \item Number components of residues
 }}
 
-\item{type}{Number (1 or 2) to indicate if the analyses of the model b.ab is studied jointly(1) or separately(2).}
+\item{Interaction}{Logical. Whether to model the interaction between factors or not.}
 
-\item{showvar}{Show variability associated to each model or not.}
+\item{Variability}{From 0 to 1. Minimum percent of data variability that must be explained by each model. By default, 0.75.}
 
-\item{showscree}{Show a screenplot.}
+\item{beta}{Numeric. Components that represent more than beta times the average variability are identified as systematic noise in residuals. Used in noise reduction mode. By default, 2.}
 }
 \value{
 A list containing as many slots as computed models, each one with the following values:

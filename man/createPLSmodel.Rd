@@ -5,23 +5,24 @@
 \title{createPLSmodel}
 \usage{
 createPLSmodel(omicslist, test.comp, messages = TRUE, scale = FALSE,
-  center = TRUE, crossval, regressor)
+  center = TRUE, crossval, regressor, showinfo = TRUE)
 }
 \arguments{
 \item{omicslist}{A list of length 2. Each slot must contain a data matrix (features x samples).}
 
-\item{test.comp}{maximum number of latent variables (or components) to test}
+\item{test.comp}{Maximum number of components allowed in PLS models. If NULL (default), the minimal effective rank of the matrices is used as the maximum number of components.}
 
 \item{messages}{If TRUE, messages about the algorithm steps will be displayed in console window.}
 
-\item{scale}{TRUE or FALSE. Whether X and Y matrices have to be scaled}
+\item{scale}{Logical. Whether X and Y matrices must be scaled. By default, FALSE.}
 
-\item{center}{TRUE or FALSE. Whether X and Y matrices have to be centered}
+\item{center}{Logical. Whether X and Y matrices must be centered. By default, TRUE.}
 
-\item{crossval}{Integer: number of cross-validation segments. The number of samples (rows of 'x') must be at least >= crossvalI.
-If NULL (default) leave-one-out crossvalidation is performed}
+\item{crossval}{Integer indicating the number of cross-validation segments. The number of samples (rows of 'x') must be at least >= crossvalI. If NULL (default), a leave-one-out crossvalidation is conducted.}
 
 \item{regressor}{Integer (1 or 2): Which of the matrices is the X matrix for PLS model.}
+
+\item{showinfo}{Logical. Whether to show function process in prompt.}
 }
 \value{
 Instance of class "opls". See package ropls. The final model has the optimal number of components used for prediction.

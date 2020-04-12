@@ -1,9 +1,9 @@
-#' @include ASCAfun-triple.R
 NULL
 
 #' Function to obtain principal components to a matrix that has more variables than individuals.
 #'
 #' @param X Matrix that has on columns the genes considered as variables in the PCA analysis.
+#' @param ncomp Number of components to extract with the PCA model.
 #'
 #' @return A list with elements:
 #' \describe{
@@ -17,7 +17,7 @@ NULL
 #' \dontrun{
 #' my.pca <- PCA.GENES(data.example)
 #' }
-PCA.GENES<-function(X)
+PCA.GENES<-function(X, ncomp = NULL)
 {
 #PCA.GENES is very useful to obtain principal components to a matrix that has more variables than individuals.
 #R can not apply princomp is such case and when there are a lot of variables eigen(t(X)%*%X) can not be computed.
@@ -45,7 +45,10 @@ normas2<-sqrt(apply(scores2^2,2,sum))
 scores1<-loadings2%*%diag(normas2)
 loadings1<-scores2%*%diag(1/normas2)
 
-output<-list(eigen,var,scores1,loadings1)
+if (is.null(ncomp)) {
+  ncomp <- dim(scores1)[2]
+}
+output<-list(eigen,var[1:ncomp,],scores1[,1:ncomp],loadings1[,1:ncomp])
 names(output)<-c("eigen","var.exp","scores","loadings")
 output
 }

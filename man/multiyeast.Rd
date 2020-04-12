@@ -1,3 +1,37 @@
+\name{multiyeast}
+\alias{multiyeast}
+\docType{data}
+\title{ A distributed yeast multiomic dataset }
+\description{
+The yeast expression data sets were collected from the Gene Expression Omnibus (GEO) database and from three different studies. All of them analyzed the effects of glucose starvation in yeast. Lab A is the Department of Biochemistry and Molecular Biology from Universitat de Valencia (accession number GSE11521) [@JE1, @JE2, @JE3]; Lab B is the Department of Molecular and Cellular Biology from Harvard University (accession number GSE56622) [@RIBO]; and Lab C is the Department of Biology from Johns Hopkins University (accession number GSE43747) [@PARCLIP]. These studies used equivalent yeast strains and experimental conditions but, as shown in Figure 1, the main effect on expression is due to data belonging to different labs, which are the batches in this case.
+}
+\usage{data("multiyeast")}
+\format{
+  6 matrices with 6 or 4 observations on 200 variables (genes).
+  \describe{
+    \item{\code{A.rna}}{Gene expression data matrix from lab A.}
+    \item{\code{A.gro}}{Transcription rates data matrix from lab A.}
+    \item{\code{B.rna}}{Gene expression data matrix from lab B.}
+    \item{\code{B.ribo}}{Translation rates data matrix from lab B.}
+    \item{\code{C.rna}}{Gene expression data matrix from lab C.}
+    \item{\code{C.par}}{Protein binded RNA data matrix from lab C.}
+  }
+}
+\details{
+The yeast expression data sets were collected from the Gene Expression Omnibus (GEO) database and from three different studies. All of them analyzed the effects of glucose starvation in yeast. Lab A is the Department of Biochemistry and Molecular Biology from Universitat de Valencia (accession number GSE11521) [@JE1, @JE2, @JE3]; Lab B is the Department of Molecular and Cellular Biology from Harvard University (accession number GSE56622) [@RIBO]; and Lab C is the Department of Biology from Johns Hopkins University (accession number GSE43747) [@PARCLIP]. These studies used equivalent yeast strains and experimental conditions but, as shown in Figure 1, the main effect on expression is due to data belonging to different labs, which are the batches in this case.
+After a proper data pre-processing for each case, a voom transformation (limma R package) was applied when necessary. Finally TMM normalization was performed on the whole set of samples from all labs. A reduced dataset was obtained by selecting 200 omic variables from each data matrix and just 3 samples from lab A.  This yeast multiomic reduced dataset is included in *MutiBaC* package to illustrate the usage of the package. The gene expression matrices can be loaded by using the *data("multiyeast")* instruction.
+}
+\source{
+https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi
+}
+
+\examples{
+data(multiyeast)
+head(A.rna)
+}
+\keyword{datasets, yeast, multiomic}
+
+\references{
 @article{JE1,
 author = {Pelechano, Vicent and P{\'e}rez-Ort{\'i}n, Jos{\'e} E.},
 title = {There is a steady-state transcriptome in exponentially growing yeast cells},
@@ -118,47 +152,5 @@ year = {2010}
 	Bdsk-Url-1 = {https://www.ncbi.nlm.nih.gov/pubmed/23409723},
 	Bdsk-Url-2 = {http://dx.doi.org/10.1186/gb-2013-14-2-r13}}
 
-	@Article{MAE,
-    title = {Software For The Integration Of Multi-Omics Experiments In Bioconductor},
-    author = {Marcel Ramos and Lucas Schiffer and Angela Re and Rimsha Azhar and Azfar Basunia and Carmen Rodriguez Cabrera and Tiffany Chan and Philip Chapman and Sean Davis and David Gomez-Cabrero and Aedin C. Culhane and Benjamin Haibe-Kains and Kasper Hansen and Hanish Kodali and Marie Stephie Louis and Arvind Singh Mer and Markus Reister and Martin Morgan and Vincent Carey and Levi Waldron},
-    journal = {Cancer Research},
-    year = {2017},
-    volume = {77(21); e39-42},
-  }
 
-	 @Article{ropls,
-    author = {E. A. Thevenot and A. Roux and Y. Xu and E. Ezan and C. Junot},
-    title = {Analysis of the human adult urinary metabolome variations with age, body mass index and gender by implementing a comprehensive workflow for univariate and OPLS statistical analyses},
-    journal = {Journal of Proteome Research},
-    year = {2015},
-    volume = {14},
-    pages = {3322-3335},
-    url = {http://pubs.acs.org/doi/full/10.1021/acs.jproteome.5b00354},
-  }
-
-  @Book{ggplot2,
-  author = {Hadley Wickham},
-  title = {ggplot2: Elegant Graphics for Data Analysis},
-  publisher = {Springer-Verlag New York},
-  year = {2016},
-  isbn = {978-3-319-24277-4},
-  url = {https://ggplot2.tidyverse.org},
 }
-
-  @article{Nueda2012,
-author = {Nueda, Maria J. and Ferrer, Alberto and Conesa, Ana},
-doi = {10.1093/biostatistics/kxr042},
-file = {:Users/manuelugidos/Library/Application Support/Mendeley Desktop/Downloaded/Nueda, Ferrer, Conesa - 2012 - ARSyN A method for the identification and removal of systematic noise in multifactorial time course micro.pdf:pdf},
-isbn = {1465-4644},
-issn = {14654644},
-journal = {Biostatistics},
-keywords = {Analysis of variance,Batch effect,Microarrays,Principal components analysis,Systematic noise},
-number = {3},
-pages = {553--566},
-pmid = {22085896},
-title = {{ARSyN: A method for the identification and removal of systematic noise in multifactorial time course microarray experiments}},
-volume = {13},
-year = {2012}
-}
-
-

@@ -1,7 +1,7 @@
 #' @include PCA-GENES.R
 NULL
 
-ASCAfun.res<-function (X,Fac) {
+ASCAfun.res<-function (X,Fac,beta) {
 
 
  PCA<-PCA.GENES(X)
@@ -23,8 +23,9 @@ ASCAfun.res<-function (X,Fac) {
 
   Eres<-X-TPres
 
-output<-list(sc,ld,ssq,X,TPres,Eres)
-names(output)<-c("scores","loadings","var.exp","X","TP","E")
+Variability <- beta*1/Matrix::rankMatrix(X)[1]
+output<-list(sc,ld,ssq,X,TPres,Eres,Variability)
+names(output)<-c("scores","loadings","var.exp","X","TP","E","Variability")
 output
 
 

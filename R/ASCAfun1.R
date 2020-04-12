@@ -1,7 +1,6 @@
-#' @include ASCA3f.R
 NULL
 
-ASCAfun1<-function (X,Design,Fac) {
+ASCAfun1<-function (X,Design,Fac,Variability) {
 
 n <- ncol(X) # number of genes
 I <- ncol(Design) # number of levels in the factor
@@ -44,12 +43,8 @@ for (i in seq_len(nrow(X))){
 
 Ea<-Xa-TPa
 
-#Leverage & SPE
-    leverage<-apply(ld^2,1,sum)
-    SPE<-apply(Ea^2,2,sum)
-
-output<-list(XK,sc,ld,ssq,Xa,TPa,Ea,leverage,SPE)
-names(output)<-c("data","scores","loadings","var.exp","X","TP","E","leverage","SPE")
+output<-list(XK,sc,ld,ssq,Xa,TPa,Ea,Variability)
+names(output)<-c("data","scores","loadings","var.exp","X","TP","E","Variability")
 output
 
 }

@@ -4,10 +4,12 @@
 \alias{PCA.GENES}
 \title{Function to obtain principal components to a matrix that has more variables than individuals.}
 \usage{
-PCA.GENES(X)
+PCA.GENES(X, ncomp = NULL)
 }
 \arguments{
 \item{X}{Matrix that has on columns the genes considered as variables in the PCA analysis.}
+
+\item{ncomp}{Number of components to extract with the PCA model.}
 }
 \value{
 A list with elements:

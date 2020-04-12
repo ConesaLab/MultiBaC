@@ -10,7 +10,7 @@ getData(ListOfBatches)
 \item{ListOfBatches}{A list of MultiAssayExperiment elements. Object returned by inputData function.}
 }
 \value{
-A list of lists.
+A list of matrices.
 }
 \description{
 getData
@@ -19,9 +19,14 @@ getData
 \dontrun{
 ## Using example data provided by MultiBaC package
 data(multiyeast)
-inputData <- readData(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par, batches = c(1,1,2,2,3,3),
-omicNames = c("RNA", "GRO", "RNA", "RIBO", "RNA", "PAR"),
-batchesNames = c("A", "B", "C"))
+my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par),
+                       batchFactor = c("A", "A", "B", "B", "C", "C"),
+                       experimentalDesign = list("A" =  c("Glu+", "Glu+",
+                       "Glu+", "Glu-", "Glu-", "Glu-"),
+                       "B" = c("Glu+", "Glu+", "Glu-", "Glu-"),
+                       "C" = c("Glu+", "Glu+", "Glu-", "Glu-")),
+                       omicNames = c("RNA", "GRO", "RNA", "RIBO", "RNA", "PAR"))
 
-omicData <- getData (inputData)}
+omicData <- getData (my_mbac$ListOfBatches)}
+
 }

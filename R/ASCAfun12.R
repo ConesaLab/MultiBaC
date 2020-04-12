@@ -1,7 +1,4 @@
-#' @include ASCAfun2.R
-NULL
-
-ASCAfun12<-function (X,Desa,Desb,Fac) {
+ASCAfun12<-function (X,Desa,Desb,Fac,Variability) {
 
 n <- ncol(X) # number of genes
 I <- ncol(Desa) # number of levels in the factor TIME
@@ -29,7 +26,7 @@ for (j in seq_len(J)){
     k=k+1
   }
 }
-
+NK<-sqrt(NK) #######
 XKw<-XK*(as.numeric(NK))
 
 PCA<-PCA.GENES(XKw)
@@ -40,7 +37,6 @@ PCA<-PCA.GENES(XKw)
       scw<-as.matrix(scw)
       ld<-as.matrix(ld)
       }
-
 # Re-weigth the scores
 sc<-scw/(as.numeric(NK))
 
@@ -56,11 +52,8 @@ for (i in seq_len(nrow(X))){
 }
 Eab<-Xab-TPab
 
-#Leverage & SPE
-    leverage<-apply(ld^2,1,sum)
-    SPE<-apply(Eab^2,2,sum)
-output<-list(XK,sc,ld,ssq,Xab,TPab,Eab,leverage,SPE)
-names(output)<-c("data","scores","loadings","var.exp","X","TP","E","leverage","SPE")
+output<-list(XK,sc,ld,ssq,Xab,TPab,Eab,Variability)
+names(output)<-c("data","scores","loadings","var.exp","X","TP","E", "Variability")
 output
 
 
