@@ -6,12 +6,12 @@
 #' @param batchFactor Either a vector or a factor indicating the batch were each input matrix belongs to (i.e. study, lab, time point, etc.). If NULL (default) no batch is considered and just ARSyNbac noise reduction mode could be applied.
 #' @param experimentalDesign A list with as many elements as batches. Each element can be a factor, a character vector or a data.frame indicating the experimental conditions for each sample in that batch. When being a data.frame with more than one column (multi-factorial experimental designs), the different columns will be combined into a single one to be used by MultiBaC or ARSyNbac. In any case, the experimental setting must be the same for all batches. In addition, the names of the elements in this list must be the same as declared in batches argument. If not (or if NULL), names are forced to be the same in as in batches argument and in the same order.
 #' @param omicNames Vector of names for each input matrix. The common omic is required to have the same name across batches.
-#' @param commonOmic Name of the common omic between the batches. It must be one of the names in omicNames argument. If NULL (default), the omic names that appears more times is selected as commonOmic.
+#' @param commonOmic Name of the common omic between the batches. It must be one of the names in omicNames argument. If NULL (default), the omic name which is common to all batches is selected as commonOmic.
 #'
 #' @return Custom mbac object. Elements in a mbac object:
 #' \enumerate{
 #'     \item ListOfBatches: A list of MultiAssayExperiment objects (one per batch).
-#'     \item commonOmic Name of the common omic between the batches. It must be one of the names in omicNames argument. If NULL (default), the omic names that appears more times is selected as commonOmic.
+#'     \item commonOmic Name of the common omic between batches.
 #' }
 #' @export
 #'

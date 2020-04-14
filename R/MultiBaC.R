@@ -34,7 +34,7 @@ NULL
 #' @return Custom mbac object. Elements in a mbac object:
 #' \enumerate{
 #'     \item ListOfBatches: A list of MultiAssayExperiment objects (one per batch).
-#'     \item commonOmic Name of the common omic between the batches. It must be one of the names in omicNames argument. If NULL (default), the omic names that appears more times is selected as commonOmic.
+#'     \item commonOmic: Name of the common omic between the batches.
 #'     \item CorrectedData: Same structure than ListOfBatches but with the corrected data instead of the original.
 #'     \item PLSmodels: PLS models created during MultiBaC method performance (one model per non-common omic data type).
 #'     \item ARSyNmodels: ARSyN models created during MultiBaC performance (one per omic data type).
@@ -134,6 +134,7 @@ MultiBaC <- function(mbac, test.comp = NULL,
 #' @return Custom mbac object. Elements in a mbac object:
 #' \enumerate{
 #'     \item ListOfBatches: A list of MultiAssayExperiment objects (one per batch).
+#'     \item commonOmic: Name of the common omic between the batches.
 #'     \item CorrectedData: Same structure than ListOfBatches but with the corrected data instead of the original.
 #'     \item PLSmodels: PLS models created during MultiBaC method performance (one model per non-common omic data type).
 #'     \item ARSyNmodels: ARSyN models created during MultiBaC performance (one per omic data type).
@@ -256,6 +257,7 @@ batchCorrection <- function(mbac, multiBatchDesign,
 #' @return Custom mbac object. Elements in a mbac object:
 #' \enumerate{
 #'     \item ListOfBatches: A list of MultiAssayExperiment objects (one per batch).
+#'     \item commonOmic: Name of the common omic between the batches.
 #'     \item PLSmodels: PLS models created during MultiBaC method performance (one model per non-common omic data type).
 #'     \item InnerRelation: Table of class data.frame containing the inner correlation (i.e. correlation between the scores of X (t) and Y (u) matrices) for each PLS model across all components.
 #' }
