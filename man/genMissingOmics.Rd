@@ -16,19 +16,19 @@ A list of *MultiAssayExperiment* structures. In this case, each batch contains a
 This function generates for all the batches the omic data they had not originally. This is the previous step to apply ARSyNbac [1] correction.
 }
 \examples{
-\dontrun{
 my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par),
                        batchFactor = c("A", "A", "B", "B", "C", "C"),
                        experimentalDesign = list("A" =  c("Glu+", "Glu+",
                        "Glu+", "Glu-", "Glu-", "Glu-"),
                        "B" = c("Glu+", "Glu+", "Glu-", "Glu-"),
                        "C" = c("Glu+", "Glu+", "Glu-", "Glu-")),
-                       omicNames = c("RNA", "GRO", "RNA", "RIBO", "RNA", "PAR"))
+                       omicNames = c("RNA", "GRO", "RNA", "RIBO", "RNA", "PAR"),
+                       commonOmic = "RNA")
 
 my_mbac_2 <- genModelList (my_mbac, test.comp = NULL,
                            scale = FALSE, center = TRUE,
-                           crossval = NULL, commonOmic = 1,
+                           crossval = NULL,
                            showinfo = TRUE)
-multiBatchDesign <- genMissingOmics(my_mbac_2, commonOmic = 1)
-}
+multiBatchDesign <- genMissingOmics(my_mbac_2)
+
 }

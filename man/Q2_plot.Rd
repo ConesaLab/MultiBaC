@@ -11,11 +11,13 @@ Q2_plot(mbac, ...)
 
 \item{...}{Other graphical parameters}
 }
+\value{
+Q2 plot of PLS models is displayed.
+}
 \description{
 Q2_plot
 }
 \examples{
-\dontrun{
 my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par),
                        batchFactor = c("A", "A", "B", "B", "C", "C"),
                        experimentalDesign = list("A" =  c("Glu+", "Glu+",
@@ -31,5 +33,5 @@ my_final_mbac <- MultiBaC (my_mbac,
                            showplot = TRUE,
                            showinfo = TRUE)
 Q2_plot (my_final_mbac$PLSmodels)
-}
+
 }

@@ -33,7 +33,7 @@ MultiBaC(mbac, test.comp = NULL, scale = FALSE, center = TRUE,
 Custom mbac object. Elements in a mbac object:
 \enumerate{
     \item ListOfBatches: A list of MultiAssayExperiment objects (one per batch).
-    \item commonOmic Name of the common omic between the batches. It must be one of the names in omicNames argument. If NULL (default), the omic names that appears more times is selected as commonOmic.
+    \item commonOmic: Name of the common omic between the batches.
     \item CorrectedData: Same structure than ListOfBatches but with the corrected data instead of the original.
     \item PLSmodels: PLS models created during MultiBaC method performance (one model per non-common omic data type).
     \item ARSyNmodels: ARSyN models created during MultiBaC performance (one per omic data type).
@@ -49,23 +49,22 @@ MultiBaC is able to remove batch effects across different omics generated within
 omic data type is included in all the batches considered.
 }
 \examples{
-\dontrun{
 my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par),
                        batchFactor = c("A", "A", "B", "B", "C", "C"),
                        experimentalDesign = list("A" =  c("Glu+", "Glu+",
                        "Glu+", "Glu-", "Glu-", "Glu-"),
                        "B" = c("Glu+", "Glu+", "Glu-", "Glu-"),
                        "C" = c("Glu+", "Glu+", "Glu-", "Glu-")),
-                       omicNames = c("RNA", "GRO", "RNA", "RIBO", "RNA", "PAR"))
+                       omicNames = c("RNA", "GRO", "RNA", "RIBO", "RNA", "PAR"),
+                       commonOmic = "RNA")
 
 my_final_mbac <- MultiBaC (my_mbac,
-                           test.comp = NULL, commonOmic = 1, scale = FALSE,
+                           test.comp = NULL, scale = FALSE,
                            center = TRUE, crossval = NULL,
                            Variability = 0.90,
-                           Interaction = TRUE,
-                           showplot = TRUE,
-                           showinfo = TRUE)
-}
+                           Interaction = TRUE ,
+                           showplot = FALSE,
+                           showinfo = FALSE)
 
 }
 \references{

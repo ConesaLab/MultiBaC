@@ -20,6 +20,7 @@ batchCorrection(mbac, multiBatchDesign, Interaction = FALSE,
 Custom mbac object. Elements in a mbac object:
 \enumerate{
     \item ListOfBatches: A list of MultiAssayExperiment objects (one per batch).
+    \item commonOmic: Name of the common omic between the batches.
     \item CorrectedData: Same structure than ListOfBatches but with the corrected data instead of the original.
     \item PLSmodels: PLS models created during MultiBaC method performance (one model per non-common omic data type).
     \item ARSyNmodels: ARSyN models created during MultiBaC performance (one per omic data type).
@@ -30,24 +31,25 @@ Custom mbac object. Elements in a mbac object:
 This function performs the ARSyNbac correction [1] for each omic contained in mulBatchDesign input object.
 }
 \examples{
-\dontrun{
 my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par),
                        batchFactor = c("A", "A", "B", "B", "C", "C"),
                        experimentalDesign = list("A" =  c("Glu+", "Glu+", "Glu+",
                        "Glu-", "Glu-", "Glu-"),
                        "B" = c("Glu+", "Glu+", "Glu-", "Glu-"),
                        "C" = c("Glu+", "Glu+", "Glu-", "Glu-")),
-                       omicNames = c("RNA", "GRO", "RNA", "RIBO", "RNA", "PAR"))
+                       omicNames = c("RNA", "GRO", "RNA", "RIBO", "RNA", "PAR"),
+                       commonOmic = "RNA")
 
 my_mbac_2 <- genModelList (my_mbac, test.comp = NULL,
                            scale = FALSE, center = TRUE,
-                           crossval = NULL, commonOmic = 1,
+                           crossval = NULL,
                            showinfo = TRUE)
-multiBatchDesign <- genMissingOmics(my_mbac_2, commonOmic = 1)
+multiBatchDesign <- genMissingOmics(my_mbac_2)
 my_finalwise_mbac <- batchCorrection(my_mbac_2,
                                      multiBatchDesign = multiBatchDesign,
-                                     Fac = NULL)
-}
+                                     Interaction = FALSE,
+                                     Variability = 0.9)
+
 }
 \references{
 [1] Nueda MJ, Ferrer A, Conesa A. ARSyN: A method for the identification and removal of systematic noise in multifactorial time course microarray experiments. Biostatistics. 2012;13(3):553-566. doi:10.1093/biostatistics/kxr042

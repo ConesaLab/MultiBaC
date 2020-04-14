@@ -24,6 +24,7 @@ genModelList(mbac, test.comp = NULL, scale = FALSE, center = TRUE,
 Custom mbac object. Elements in a mbac object:
 \enumerate{
     \item ListOfBatches: A list of MultiAssayExperiment objects (one per batch).
+    \item commonOmic: Name of the common omic between the batches.
     \item PLSmodels: PLS models created during MultiBaC method performance (one model per non-common omic data type).
     \item InnerRelation: Table of class data.frame containing the inner correlation (i.e. correlation between the scores of X (t) and Y (u) matrices) for each PLS model across all components.
 }
@@ -32,18 +33,18 @@ Custom mbac object. Elements in a mbac object:
 This function performs PLS models for every batch. A PLS model is generated for each non-common omic in each batch.
 }
 \examples{
-\dontrun{
 my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par),
                        batchFactor = c("A", "A", "B", "B", "C", "C"),
                        experimentalDesign = list("A" =  c("Glu+", "Glu+",
                        "Glu+", "Glu-", "Glu-", "Glu-"),
                         "B" = c("Glu+", "Glu+", "Glu-", "Glu-"),
                          "C" = c("Glu+", "Glu+", "Glu-", "Glu-")),
-                       omicNames = c("RNA", "GRO", "RNA", "RIBO", "RNA", "PAR"))
+                       omicNames = c("RNA", "GRO", "RNA", "RIBO", "RNA", "PAR"),
+                       commonOmic = "RNA")
 
 my_mbac_2 <- genModelList (my_mbac, test.comp = NULL,
                            scale = FALSE, center = TRUE,
-                           crossval = NULL, commonOmic = 1,
+                           crossval = NULL,
                            showinfo = TRUE)
-}
+
 }

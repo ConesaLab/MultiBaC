@@ -13,11 +13,13 @@ inner_relPlot(mbac, comp2plot = c(1, 2), ...)
 
 \item{...}{Other graphical parameters}
 }
+\value{
+Inner relation plot for PLS models is displayed.
+}
 \description{
 inner_relPLot
 }
 \examples{
-\dontrun{
 my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par),
                        batchFactor = c("A", "A", "B", "B", "C", "C"),
                        experimentalDesign = list("A" =  c("Glu+", "Glu+",
@@ -33,5 +35,5 @@ my_final_mbac <- MultiBaC (my_mbac,
                            showplot = TRUE,
                            showinfo = TRUE)
 inner_relPlot (my_final_mbac$PLSmodels)
-}
+
 }

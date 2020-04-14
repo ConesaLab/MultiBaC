@@ -11,12 +11,14 @@ batchEstPlot(mbac, ...)
 
 \item{...}{Other graphical parameters.}
 }
+\value{
+Batch estimation plot is displayed.
+}
 \description{
 This function uses linear models to estimate the batch effect magnitude using the common data across batches. It compares
 the result with theoretical distribution of diferrent levels of batch magnitude.
 }
 \examples{
-\dontrun{
 my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par),
                        batchFactor = c("A", "A", "B", "B", "C", "C"),
                        experimentalDesign = list("A" =  c("Glu+", "Glu+",
@@ -26,5 +28,5 @@ my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.p
                        omicNames = c("RNA", "GRO", "RNA", "RIBO", "RNA", "PAR"))
 
 batchEstPlot (my_mbac)
-}
+
 }

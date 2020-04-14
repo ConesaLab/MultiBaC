@@ -25,11 +25,13 @@ plot_pca(mbac, col.by.batch = TRUE, col.per.group = NULL,
 
 \item{...}{Other graphical arguments.}
 }
+\value{
+A PCA plot is displayed.
+}
 \description{
 plot_pca
 }
 \examples{
-\dontrun{
 my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par),
                        batchFactor = c("A", "A", "B", "B", "C", "C"),
                        experimentalDesign = list("A" =  c("Glu+", "Glu+",
@@ -47,5 +49,5 @@ my_final_mbac <- MultiBaC (my_mbac,
                            showplot = TRUE,
                            showinfo = TRUE)
 plot_pca(my_final_mbac$CorrectedData, typeP = "pca.cor")
-}
+
 }

@@ -10,6 +10,7 @@ library("ropls")
 library("MultiBaC")
 
 ## ----init, eval = TRUE, echo = FALSE, fig.cap = "PCA plot of original gene expression data (before correction). Batches are completely separated from each other. Plot generated with MultiBaC package (see Visualization of results Section)."----
+data("multiyeast")
 data_RNA <- createMbac (inputOmics = list(A.rna, B.rna, C.rna), 
                     batchFactor = c("A", "B", "C"),
                     experimentalDesign = list("A" =  c("Glu+", "Glu+", 
@@ -24,7 +25,7 @@ custom_col <- c("brown2", "dodgerblue", "forestgreen")
 custom_pch <- c(19,19,19,1,1,1,
                 19,19,1,1,
                 19,19,1,1)
-plot(data_RNA, type="pca.org", bty = "L",
+plot(data_RNA, typeP="pca.org", bty = "L",
      pch = custom_pch, cex = 3, col.per.group = custom_col,
      legend.text = c("Color: Batch", names(data_RNA$ListOfBatches),
                      "Fill: Cond.", levels(colData(data_RNA$ListOfBatches$A)$tfactor)),
@@ -62,7 +63,7 @@ data_RNA<- createMbac (inputOmics = list(A.rna, B.rna, C.rna),
 par(mfrow = c(1,2))
 arsyn_1 <- ARSyNbac(data_RNA, modelName = "RNA", Variability = 0.95, 
                  batchEstimation = TRUE, Interaction = FALSE)
-plot(arsyn_1, type="pca.cor", bty = "L",
+plot(arsyn_1, typeP="pca.cor", bty = "L",
      pch = custom_pch, cex = 3, col.per.group = custom_col,
      legend.text = c("Color: Batch", names(data_RNA$ListOfBatches),
                      "Fill: Cond.", levels(colData(data_RNA$ListOfBatches$A)$tfactor)),
@@ -78,7 +79,7 @@ plot(arsyn_1, type="pca.cor", bty = "L",
 par(mfrow = c(1,2))
 arsyn_2 <- ARSyNbac(data_RNA, modelName = "RNA", Variability = 0.95, 
                  batchEstimation = TRUE, Interaction = TRUE)
-plot(arsyn_2, type="pca.cor", bty = "L",
+plot(arsyn_2, typeP="pca.cor", bty = "L",
      pch = custom_pch, cex = 3, col.per.group = custom_col,
      legend.text = c("Color: Batch", names(data_RNA$ListOfBatches),
                      "Fill: Cond.", levels(colData(data_RNA$ListOfBatches$A)$tfactor)),
@@ -94,7 +95,7 @@ plot(arsyn_2, type="pca.cor", bty = "L",
 par(mfrow = c(1,2))
 arsyn_3 <- ARSyNbac(data_RNA, modelName = "RNA", beta = 0.5, 
                  batchEstimation = FALSE)
-plot(arsyn_3, type="pca.cor", bty = "L",
+plot(arsyn_3, typeP="pca.cor", bty = "L",
      pch = custom_pch, cex = 3, col.per.group = custom_col,
      legend.text = c("Color: Batch", names(data_RNA$ListOfBatches),
                      "Fill: Cond.", levels(colData(data_RNA$ListOfBatches$A)$tfactor)),
@@ -161,7 +162,7 @@ my_finalwise_mbac <- batchCorrection(my_mbac_2,
                                      Variability = 0.90)
 
 ## ---- eval = FALSE, echo = TRUE--------------------------------------------
-#  plot (mbac, type = "def",
+#  plot (x, typeP = "def",
 #        col.by.batch = TRUE,
 #        col.per.group = NULL,
 #        comp2plot = c(1,2),
@@ -174,22 +175,22 @@ my_aux <- my_final_mbac
 my_final_mbac$PLSmodels <- my_final_mbac$PLSmodels[1]
 
 ## ----inner, fig.cap="Plot of inner relations of PLS components. Only results for batch 'A' are shown as example. Each panel represents the inner correlation of one component of the PCA model. Red line indicates the diagonal when the correlation is maximal (1:1)."----
-plot (my_final_mbac, type = "inner", comp2plot = c(1,2))
+plot (my_final_mbac, typeP = "inner", comp2plot = c(1,2))
 
 ## ---- eval = TRUE, echo = FALSE--------------------------------------------
 # restore state
 my_final_mbac <- my_aux
 
 ## ----batchest, fig.cap="Batch effect estimation plot. Dashed lines represent theoretical batch magnitudes. Violin plots represent the distribution of batch effect coefficents observed in data."----
-plot (my_final_mbac, type = "batch")
+plot (my_final_mbac, typeP = "batch")
 
 ## ----pca-org, fig.cap="Default PCA plot on the original data."-------------
-plot (my_final_mbac, type = "pca.org",
+plot (my_final_mbac, typeP = "pca.org",
       asp = 1, cex.axis = 1, cex.lab = 1, cex = 3, bty = "L", 
       cex.main = 1.2, pch = 19)
 
 ## ----pca-cor, fig.cap="Default PCA plot on the corrected data."------------
-plot (my_final_mbac, type = "pca.cor", 
+plot (my_final_mbac, typeP = "pca.cor", 
       asp = 1, cex.axis = 1, cex.lab = 1, cex = 3, bty = "L", 
       cex.main = 1.2, pch = 19)
 
@@ -202,7 +203,7 @@ custom_pch <- c(19,19,19,1,1,1,15,15,15,0,0,0, # batch A
                   19,19,1,1,17,17,2,2,  # batch B
                   19,19,1,1,18,18,5,5)  # batch C
 
-plot(my_final_mbac, type = "pca.both", col.by.batch = TRUE, 
+plot(my_final_mbac, typeP = "pca.both", col.by.batch = TRUE, 
      col.per.group = custom_col, comp2plot = 1:3,
      asp = 1, cex.axis = 1.3, cex.lab = 1.2, cex = 3, bty = "L", 
      cex.main = 1.7, pch = custom_pch,
@@ -218,4 +219,7 @@ plot(my_final_mbac, type = "pca.both", col.by.batch = TRUE,
                                   NA, 1, 1),
                         "bty" = "n",
                         "cex" = 2))
+
+## --------------------------------------------------------------------------
+sessionInfo()
 

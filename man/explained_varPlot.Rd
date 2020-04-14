@@ -11,11 +11,14 @@ explained_varPlot(mbac, ...)
 
 \item{...}{Other graphical parameters.}
 }
+\value{
+Explained variance plot for ARSyN models is displayed.
+}
 \description{
 explained_varPlot
 }
 \examples{
-\dontrun{
+
 my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par),
                        batchFactor = c("A", "A", "B", "B", "C", "C"),
                        experimentalDesign = list("A" =  c("Glu+", "Glu+",
@@ -31,5 +34,5 @@ my_final_mbac <- MultiBaC (my_mbac,
                            showplot = TRUE,
                            showinfo = TRUE)
 explained_varPlot (my_final_mbac$ARSyNmodels)
-}
+
 }

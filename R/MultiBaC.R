@@ -48,23 +48,22 @@ NULL
 #'
 #'
 #' @examples
-#' \dontrun{
 #' my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par),
 #'                        batchFactor = c("A", "A", "B", "B", "C", "C"),
 #'                        experimentalDesign = list("A" =  c("Glu+", "Glu+",
 #'                        "Glu+", "Glu-", "Glu-", "Glu-"),
 #'                        "B" = c("Glu+", "Glu+", "Glu-", "Glu-"),
 #'                        "C" = c("Glu+", "Glu+", "Glu-", "Glu-")),
-#'                        omicNames = c("RNA", "GRO", "RNA", "RIBO", "RNA", "PAR"))
+#'                        omicNames = c("RNA", "GRO", "RNA", "RIBO", "RNA", "PAR"),
+#'                        commonOmic = "RNA")
 #'
 #' my_final_mbac <- MultiBaC (my_mbac,
-#'                            test.comp = NULL, commonOmic = 1, scale = FALSE,
+#'                            test.comp = NULL, scale = FALSE,
 #'                            center = TRUE, crossval = NULL,
 #'                            Variability = 0.90,
-#'                            Interaction = TRUE,
-#'                            showplot = TRUE,
-#'                            showinfo = TRUE)
-#' }
+#'                            Interaction = TRUE ,
+#'                            showplot = FALSE,
+#'                            showinfo = FALSE)
 #'
 MultiBaC <- function(mbac, test.comp = NULL,
                      scale = FALSE, center = TRUE,
@@ -144,24 +143,25 @@ MultiBaC <- function(mbac, test.comp = NULL,
 #' @export
 #' @references [1] Nueda MJ, Ferrer A, Conesa A. ARSyN: A method for the identification and removal of systematic noise in multifactorial time course microarray experiments. Biostatistics. 2012;13(3):553-566. doi:10.1093/biostatistics/kxr042
 #' @examples
-#' \dontrun{
 #' my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par),
 #'                        batchFactor = c("A", "A", "B", "B", "C", "C"),
 #'                        experimentalDesign = list("A" =  c("Glu+", "Glu+", "Glu+",
 #'                        "Glu-", "Glu-", "Glu-"),
 #'                        "B" = c("Glu+", "Glu+", "Glu-", "Glu-"),
 #'                        "C" = c("Glu+", "Glu+", "Glu-", "Glu-")),
-#'                        omicNames = c("RNA", "GRO", "RNA", "RIBO", "RNA", "PAR"))
+#'                        omicNames = c("RNA", "GRO", "RNA", "RIBO", "RNA", "PAR"),
+#'                        commonOmic = "RNA")
 #'
 #' my_mbac_2 <- genModelList (my_mbac, test.comp = NULL,
 #'                            scale = FALSE, center = TRUE,
-#'                            crossval = NULL, commonOmic = 1,
+#'                            crossval = NULL,
 #'                            showinfo = TRUE)
-#' multiBatchDesign <- genMissingOmics(my_mbac_2, commonOmic = 1)
+#' multiBatchDesign <- genMissingOmics(my_mbac_2)
 #' my_finalwise_mbac <- batchCorrection(my_mbac_2,
 #'                                      multiBatchDesign = multiBatchDesign,
-#'                                      Fac = NULL)
-#' }
+#'                                      Interaction = FALSE,
+#'                                      Variability = 0.9)
+#'
 
 batchCorrection <- function(mbac, multiBatchDesign,
                             Interaction = FALSE,
@@ -264,20 +264,20 @@ batchCorrection <- function(mbac, multiBatchDesign,
 #'
 #' @export
 #' @examples
-#' \dontrun{
 #' my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par),
 #'                        batchFactor = c("A", "A", "B", "B", "C", "C"),
 #'                        experimentalDesign = list("A" =  c("Glu+", "Glu+",
 #'                        "Glu+", "Glu-", "Glu-", "Glu-"),
 #'                         "B" = c("Glu+", "Glu+", "Glu-", "Glu-"),
 #'                          "C" = c("Glu+", "Glu+", "Glu-", "Glu-")),
-#'                        omicNames = c("RNA", "GRO", "RNA", "RIBO", "RNA", "PAR"))
+#'                        omicNames = c("RNA", "GRO", "RNA", "RIBO", "RNA", "PAR"),
+#'                        commonOmic = "RNA")
 #'
 #' my_mbac_2 <- genModelList (my_mbac, test.comp = NULL,
 #'                            scale = FALSE, center = TRUE,
-#'                            crossval = NULL, commonOmic = 1,
+#'                            crossval = NULL,
 #'                            showinfo = TRUE)
-#' }
+#'
 genModelList <- function(mbac, test.comp = NULL, scale = FALSE, center = TRUE,
                          crossval = NULL, showinfo = TRUE) {
 
@@ -348,21 +348,21 @@ genModelList <- function(mbac, test.comp = NULL, scale = FALSE, center = TRUE,
 #'
 #' @export
 #' @examples
-#' \dontrun{
 #' my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par),
 #'                        batchFactor = c("A", "A", "B", "B", "C", "C"),
 #'                        experimentalDesign = list("A" =  c("Glu+", "Glu+",
 #'                        "Glu+", "Glu-", "Glu-", "Glu-"),
 #'                        "B" = c("Glu+", "Glu+", "Glu-", "Glu-"),
 #'                        "C" = c("Glu+", "Glu+", "Glu-", "Glu-")),
-#'                        omicNames = c("RNA", "GRO", "RNA", "RIBO", "RNA", "PAR"))
+#'                        omicNames = c("RNA", "GRO", "RNA", "RIBO", "RNA", "PAR"),
+#'                        commonOmic = "RNA")
 #'
 #' my_mbac_2 <- genModelList (my_mbac, test.comp = NULL,
 #'                            scale = FALSE, center = TRUE,
-#'                            crossval = NULL, commonOmic = 1,
+#'                            crossval = NULL,
 #'                            showinfo = TRUE)
-#' multiBatchDesign <- genMissingOmics(my_mbac_2, commonOmic = 1)
-#' }
+#' multiBatchDesign <- genMissingOmics(my_mbac_2)
+#'
 genMissingOmics <- function(mbac) {
 
   # Get matrices ---------------------------------------------------------------

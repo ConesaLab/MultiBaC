@@ -16,7 +16,6 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par),
 #'                        batchFactor = c("A", "A", "B", "B", "C", "C"),
 #'                        experimentalDesign = list("A" =  c("Glu+", "Glu+",
@@ -25,7 +24,7 @@
 #'                        "C" = c("Glu+", "Glu+", "Glu-", "Glu-")),
 #'                        omicNames = c("RNA", "GRO", "RNA", "RIBO", "RNA", "PAR"),
 #'                        commonOmic = "RNA")
-#' }
+#'
 createMbac <- function(inputOmics, batchFactor = NULL,
                        experimentalDesign, omicNames,
                        commonOmic = NULL) {
@@ -38,7 +37,7 @@ createMbac <- function(inputOmics, batchFactor = NULL,
     batchFactor <- c("Batch1")
   }
   batches <- as.character(unique(batchFactor))
-  if (class(experimentalDesign) == "list") {
+  if (is(experimentalDesign,"list")) {
     namexp <- names(experimentalDesign)
     if (!is.null(namexp)) {
       if (!(length(intersect(batches, namexp)) == length(batches) && length(batches) == length(namexp))) {
@@ -109,10 +108,10 @@ createMbac <- function(inputOmics, batchFactor = NULL,
   }
 
   # cond.factor input
-  if (class(experimentalDesign) != "list") {
+  if (!is(experimentalDesign,"list")) {
     experimentalDesign <- sapply(levels(batchFactor), function(x) {
       data.frame(experimentalDesign)[which(batchFactor == x),]
-    }, simplify = F)
+    }, simplify = FALSE)
   }
   omicList <- sapply(levels(factor(batchFactor)), function(x) {
     aux.list <- inputOmics[which(batchFactor==x)]

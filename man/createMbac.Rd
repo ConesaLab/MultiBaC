@@ -16,20 +16,19 @@ createMbac(inputOmics, batchFactor = NULL, experimentalDesign, omicNames,
 
 \item{omicNames}{Vector of names for each input matrix. The common omic is required to have the same name across batches.}
 
-\item{commonOmic}{Name of the common omic between the batches. It must be one of the names in omicNames argument. If NULL (default), the omic names that appears more times is selected as commonOmic.}
+\item{commonOmic}{Name of the common omic between the batches. It must be one of the names in omicNames argument. If NULL (default), the omic name which is common to all batches is selected as commonOmic.}
 }
 \value{
 Custom mbac object. Elements in a mbac object:
 \enumerate{
     \item ListOfBatches: A list of MultiAssayExperiment objects (one per batch).
-    \item commonOmic Name of the common omic between the batches. It must be one of the names in omicNames argument. If NULL (default), the omic names that appears more times is selected as commonOmic.
+    \item commonOmic Name of the common omic between batches.
 }
 }
 \description{
 This function creates a list object to be used by MultiBaC function from a set of matrix R objects.
 }
 \examples{
-\dontrun{
 my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par),
                        batchFactor = c("A", "A", "B", "B", "C", "C"),
                        experimentalDesign = list("A" =  c("Glu+", "Glu+",
@@ -38,5 +37,5 @@ my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.p
                        "C" = c("Glu+", "Glu+", "Glu-", "Glu-")),
                        omicNames = c("RNA", "GRO", "RNA", "RIBO", "RNA", "PAR"),
                        commonOmic = "RNA")
-}
+
 }

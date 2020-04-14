@@ -78,7 +78,7 @@ createPLSmodel <- function(omicslist, test.comp, messages = TRUE,
   }
   # Create models ---------------------------------------------------------------
   models <- list()
-  if (class(regressor) == "character") {
+  if (is(regressor, "character")) {
     regressor <- which(names(omicslist) == regressor)
   }
   for ( i in seq_along(names(omicslist))[-regressor]) {

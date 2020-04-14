@@ -29,9 +29,8 @@ NULL
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' my_mbac <- createMbac (inputOmics = list(A.rna, B.rna, C.rna),
-#'                        batchFactor = c("A", B", C"),
+#'                        batchFactor = c("A", "B", "C"),
 #'                        experimentalDesign = list("A" =  c("Glu+",
 #'                        "Glu+", "Glu+", "Glu-",
 #'                        "Glu-", "Glu-"),
@@ -40,8 +39,8 @@ NULL
 #'                        omicNames = "RNA")
 #' my_final_mbac <- ARSyNbac (my_mbac, batchEstimation = TRUE,
 #'                   Interaction=TRUE, Variability = 0.75, beta = 2,
-#'                   modelName = "Model1")
-#' }
+#'                   modelName = "Model 1",
+#'                   showplot = FALSE)
 #'
 ARSyNbac <- function(mbac, batchEstimation = TRUE,
                      Interaction=FALSE, Variability = 0.90, beta = 2,
