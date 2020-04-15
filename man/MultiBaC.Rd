@@ -49,7 +49,6 @@ MultiBaC is able to remove batch effects across different omics generated within
 omic data type is included in all the batches considered.
 }
 \examples{
-#' library('MultiBaC')
 data('multiyeast')
 
 my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par),

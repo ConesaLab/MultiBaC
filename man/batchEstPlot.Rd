@@ -19,7 +19,6 @@ This function uses linear models to estimate the batch effect magnitude using th
 the result with theoretical distribution of diferrent levels of batch magnitude.
 }
 \examples{
-library('MultiBaC')
 data('multiyeast')
 
 my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par),

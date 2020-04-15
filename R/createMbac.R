@@ -16,7 +16,6 @@
 #' @export
 #'
 #' @examples
-#' library('MultiBaC')
 #' data('multiyeast')
 #'
 #' my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par),
@@ -40,7 +39,7 @@ createMbac <- function(inputOmics, batchFactor = NULL,
     batchFactor <- c("Batch1")
   }
   batches <- as.character(unique(batchFactor))
-  if (is(experimentalDesign,"list")) {
+  if (methods::is(experimentalDesign,"list")) {
     namexp <- names(experimentalDesign)
     if (!is.null(namexp)) {
       if (!(length(intersect(batches, namexp)) == length(batches) && length(batches) == length(namexp))) {
@@ -111,7 +110,7 @@ createMbac <- function(inputOmics, batchFactor = NULL,
   }
 
   # cond.factor input
-  if (!is(experimentalDesign,"list")) {
+  if (!methods::is(experimentalDesign,"list")) {
     experimentalDesign <- sapply(levels(batchFactor), function(x) {
       data.frame(experimentalDesign)[which(batchFactor == x),]
     }, simplify = FALSE)

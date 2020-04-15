@@ -18,7 +18,6 @@ Explained variance plot for ARSyN models is displayed.
 explained_varPlot
 }
 \examples{
-library('MultiBaC')
 data('multiyeast')
 
 my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par),

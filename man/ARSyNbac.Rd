@@ -36,7 +36,6 @@ Custom mbac object. Elements in a mbac object:
 ARSyNbac
 }
 \examples{
-library('MultiBaC')
 data('multiyeast')
 
 my_mbac <- createMbac (inputOmics = list(A.rna, B.rna, C.rna),

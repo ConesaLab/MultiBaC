@@ -32,7 +32,6 @@ A PCA plot is displayed.
 plot_pca
 }
 \examples{
-library('MultiBaC')
 data('multiyeast')
 
 my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par),
@@ -43,7 +42,7 @@ my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.p
                        "C" = c("Glu+", "Glu+", "Glu-", "Glu-")),
                        omicNames = c("RNA", "GRO", "RNA", "RIBO", "RNA", "PAR"))
 
-plot_pca(my_mbac$ListOfBatches, typeP = "pca.org")
+plot_pca(my_mbac, typeP = "pca.org")
 
 my_final_mbac <- MultiBaC (my_mbac,
                            test.comp = NULL, scale = FALSE,

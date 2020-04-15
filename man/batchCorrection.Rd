@@ -31,7 +31,6 @@ Custom mbac object. Elements in a mbac object:
 This function performs the ARSyNbac correction [1] for each omic contained in mulBatchDesign input object.
 }
 \examples{
-library('MultiBaC')
 data('multiyeast')
 
 my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par),

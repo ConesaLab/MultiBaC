@@ -34,7 +34,7 @@ number of component of the model that maximize the Q^2 as a measure of predictio
 \examples{
 \dontrun{
 ## Using example data provided by MultiBaC package
-data(example)
+data('multiyeast')
 
 omicsList <- list("RNA" = A.rna, "GRO" = A.gro)
 

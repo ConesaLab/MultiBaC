@@ -18,7 +18,6 @@ Q2 plot of PLS models is displayed.
 Q2_plot
 }
 \examples{
-library('MultiBaC')
 data('multiyeast')
 
 my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par),

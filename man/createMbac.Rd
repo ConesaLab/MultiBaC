@@ -29,7 +29,6 @@ Custom mbac object. Elements in a mbac object:
 This function creates a list object to be used by MultiBaC function from a set of matrix R objects.
 }
 \examples{
-library('MultiBaC')
 data('multiyeast')
 
 my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par),

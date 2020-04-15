@@ -43,7 +43,7 @@ mbacClass = function(list, ...) {
 #' @examples
 #' \dontrun{
 #' ## Using example data provided by MultiBaC package
-#' data(example)
+#' data('multiyeast')
 #'
 #' omicsList <- list("RNA" = A.rna, "GRO" = A.gro)
 #'
@@ -78,7 +78,7 @@ createPLSmodel <- function(omicslist, test.comp, messages = TRUE,
   }
   # Create models ---------------------------------------------------------------
   models <- list()
-  if (is(regressor, "character")) {
+  if (methods::is(regressor, "character")) {
     regressor <- which(names(omicslist) == regressor)
   }
   for ( i in seq_along(names(omicslist))[-regressor]) {

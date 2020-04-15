@@ -29,7 +29,6 @@ NULL
 #' @export
 #'
 #' @examples
-#' library('MultiBaC')
 #' data('multiyeast')
 #'
 #' my_mbac <- createMbac (inputOmics = list(A.rna, B.rna, C.rna),
