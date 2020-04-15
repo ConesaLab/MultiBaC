@@ -1,137 +1,225 @@
-## ----setup, include=FALSE------------------------------------------------
-knitr::opts_chunk$set(echo = TRUE, fig.width = 7, fig.height = 5)
+## ----style, echo = FALSE, results = 'asis'---------------------------------
+BiocStyle::markdown()
 
-## ---- include=TRUE-------------------------------------------------------
-library(MultiBaC)
-data(multiyeast)
+## ----setup, include=FALSE--------------------------------------------------
+knitr::opts_chunk$set(echo = TRUE, fig.width = 12, fig.height = 7)
+devtools::load_all(".")
+library("MultiAssayExperiment")
+library("ggplot2")
+library("ropls")
+library("MultiBaC")
 
-## ---- include=TRUE-------------------------------------------------------
+## ----init, eval = TRUE, echo = FALSE, fig.cap = "PCA plot of original gene expression data (before correction). Batches are completely separated from each other. Plot generated with MultiBaC package (see Visualization of results Section)."----
+data("multiyeast")
+data_RNA <- createMbac (inputOmics = list(A.rna, B.rna, C.rna), 
+                    batchFactor = c("A", "B", "C"),
+                    experimentalDesign = list("A" =  c("Glu+", "Glu+", 
+                                                "Glu+", "Glu-", 
+                                               "Glu-", "Glu-"),
+                                       "B" = c("Glu+", "Glu+", 
+                                               "Glu-", "Glu-"),
+                                       "C" = c("Glu+", "Glu+", 
+                                               "Glu-", "Glu-")),
+                    omicNames = "RNA")
+custom_col <- c("brown2", "dodgerblue", "forestgreen")
+custom_pch <- c(19,19,19,1,1,1,
+                19,19,1,1,
+                19,19,1,1)
+plot(data_RNA, typeP="pca.org", bty = "L",
+     pch = custom_pch, cex = 3, col.per.group = custom_col,
+     legend.text = c("Color: Batch", names(data_RNA$ListOfBatches),
+                     "Fill: Cond.", levels(colData(data_RNA$ListOfBatches$A)$tfactor)),
+     args.legend = list("x" = "topright",
+                        "pch" = c(NA, 15, 15, 15, 
+                                  NA, 15, 3),
+                        "col" = c(NA, "brown2", "dodgerblue", "forestgreen",
+                                  NA, 1, 1),
+                        "bty" = "n",
+                        "cex" = 2))
+
+## --------------------------------------------------------------------------
+data("multiyeast")
 head(A.rna)
 
-## ---- include=TRUE-------------------------------------------------------
-input <- inputData (A.rna, A.gro, B.rna, B.ribo, C.rna, C.par, 
-                    batches = c(1,1,2,2,3,3),
-                    omicNames = c("RNA", "GRO", "RNA", "RIBO", "RNA", "PAR"), 
-                    batchesNames = c("A", "B", "C"))
+## --------------------------------------------------------------------------
+data_RNA<- createMbac (inputOmics = list(A.rna, B.rna, C.rna), 
+                    batchFactor = c("A", "B", "C"),
+                    experimentalDesign = list("A" =  c("Glu+", "Glu+", 
+                                                "Glu+", "Glu-", 
+                                               "Glu-", "Glu-"),
+                                       "B" = c("Glu+", "Glu+", 
+                                               "Glu-", "Glu-"),
+                                       "C" = c("Glu+", "Glu+", 
+                                               "Glu-", "Glu-")),
+                    omicNames = "RNA")
 
-## ---- include=TRUE-------------------------------------------------------
-batchEstPlot(input, commonOmic = 1)
+## ---- eval = FALSE---------------------------------------------------------
+#  ARSyNbac (mbac, batchEstimation = TRUE,
+#            Interaction=FALSE, Variability = 0.90, beta = 2,
+#            modelName = "Model 1",
+#            showplot = TRUE)
 
-## ---- include = TRUE-----------------------------------------------------
-# Create a global matrix
-inData <- t(cbind(A.rna, B.rna, C.rna, A.gro, B.ribo, C.par))
+## ----arsyn1, eval = TRUE, message = FALSE, fig.cap = "Batch correction when Interaction=FALSE. Left: Explained variance plot. Default plot when showplot = TRUE. It represents the number of components (x axis) needed to explain a certain variability (y axis) of the effect of interest (batch effect). The number of components selected in the model is indicated with a triangle symbol. Gray dashed line indicates the threshold given by the Variability argument (in percentage). Right: PCA plot of corrected gene expression data when not considering the interaction batch-condition."----
+par(mfrow = c(1,2))
+arsyn_1 <- ARSyNbac(data_RNA, modelName = "RNA", Variability = 0.95, 
+                 batchEstimation = TRUE, Interaction = FALSE)
+plot(arsyn_1, typeP="pca.cor", bty = "L",
+     pch = custom_pch, cex = 3, col.per.group = custom_col,
+     legend.text = c("Color: Batch", names(data_RNA$ListOfBatches),
+                     "Fill: Cond.", levels(colData(data_RNA$ListOfBatches$A)$tfactor)),
+     args.legend = list("x" = "topright",
+                        "pch" = c(NA, 15, 15, 15, 
+                                  NA, 15, 3),
+                        "col" = c(NA, "brown2", "dodgerblue", "forestgreen",
+                                  NA, 1, 1),
+                        "bty" = "n",
+                        "cex" = 1.2))
 
-# Generate PCA analysis
-pc <- ropls::opls(inData, predI = 2, scaleC = "center", 
-                  fig.pdfC = NULL, info.txtC = NULL)
+## ----arsyn2, message = FALSE, fig.cap = "Batch correction when Interaction = TRUE. Left: Explained variance plot. Default plot when showplot = TRUE. It represents the number of components (x axis) needed to explain a certain variability (y axis) of the effect of interest (batch effect). The number of components selected in the model is indicated with a triangle symbol. Gray dashed line indicates the threshold given by the Variability argument (in percentage). Right: PCA plot of corrected gene expression data considering the interaction batch-condition."----
+par(mfrow = c(1,2))
+arsyn_2 <- ARSyNbac(data_RNA, modelName = "RNA", Variability = 0.95, 
+                 batchEstimation = TRUE, Interaction = TRUE)
+plot(arsyn_2, typeP="pca.cor", bty = "L",
+     pch = custom_pch, cex = 3, col.per.group = custom_col,
+     legend.text = c("Color: Batch", names(data_RNA$ListOfBatches),
+                     "Fill: Cond.", levels(colData(data_RNA$ListOfBatches$A)$tfactor)),
+     args.legend = list("x" = "topright",
+                        "pch" = c(NA, 15, 15, 15, 
+                                  NA, 15, 3),
+                        "col" = c(NA, "brown2", "dodgerblue", "forestgreen",
+                                  NA, 1, 1),
+                        "bty" = "n",
+                        "cex" = 1.2))
 
-# Plot PCA
-{mypar <- par(no.readonly = TRUE)
-  mai <- c(par()$mai[1:3],par()$pin[2]-0.2)
-  par(mfrow= c(1,1), xpd = TRUE, mai = mai)}
-  
-plot(pc@scoreMN,
-     xlab = paste0("PC 1: ",
-                   pc@modelDF$`R2X(cum)`[1]*100, " %"),
-     ylab = paste0("PC 2: ",
-                   pc@modelDF$`R2X(cum)`[2]*100, " %"),
-     # pch = omic; fill = condition
-     pch = c(19,19,19,1,1,1,19,19,1,1,19,19,1,1, # RNA
-             15,15,15,0,0,0, # GRO
-             17,17,2,2, # RIBO
-             18,18,5,5),# PAR
-     # col = batch
-     col = rep(c(rep("brown", 6),
-                 rep("dodgerblue2", 4),
-                 rep("forestgreen", 4)),2),
-     # other arguments
-     asp = 1, cex.axis = 1.3, cex.lab = 1.2, cex = 1.7, bty = "L",
-     main = "Scoreplot of corrected data sets", cex.main = 1.7,
-     xlim = c(-30, 40), ylim = c(-20,20), font.lab = 2)
-abline(v = 0, lty = 5, col = "gray", xpd = FALSE)
-abline(h = 0, lty = 5, col = "gray", xpd = FALSE)
-legend(60,40, legend = c("Shape: Omic",
-                             "RNA", "GRO", "RIBO", "PAR",
-                             "Fill: Condition",
-                             "Glu +", "Glu -",
-                             "Color: Batch",
-                             "Batch A", "Batch B", "Batch C"),
-       col = c("white", rep(1, 4),
-               "white", 1, 1,
-               "white", "brown", "dodgerblue2", "forestgreen"),
-       pch = c(0, 19, 15, 17, 18,
-               0, 19, 1,
-               0, 15, 15, 15), cex = 1.4, bty = "n")
+## ----arsyn3, message = FALSE, fig.cap = "Noise reduction mode. Left: Explained variance plot. Default plot when showplot = TRUE. It represents the percentage of variability in the residuals (y axis) explained by a model with a given number of principal components (x axis). The number of selected components in the final model is indicated with a triangle symbol, and computed to explain beta times the average variability of the residuals. Right: PCA plot of corrected gene expression data."----
+par(mfrow = c(1,2))
+arsyn_3 <- ARSyNbac(data_RNA, modelName = "RNA", beta = 0.5, 
+                 batchEstimation = FALSE)
+plot(arsyn_3, typeP="pca.cor", bty = "L",
+     pch = custom_pch, cex = 3, col.per.group = custom_col,
+     legend.text = c("Color: Batch", names(data_RNA$ListOfBatches),
+                     "Fill: Cond.", levels(colData(data_RNA$ListOfBatches$A)$tfactor)),
+     args.legend = list("x" = "topright",
+                        "pch" = c(NA, 15, 15, 15, 
+                                  NA, 15, 3),
+                        "col" = c(NA, "brown2", "dodgerblue", "forestgreen",
+                                  NA, 1, 1),
+                        "bty" = "n",
+                        "cex" = 1.2))
 
-## ---- include=TRUE-------------------------------------------------------
-cond.factor = list("A" = c("Glu+", "Glu+", "Glu+", "Glu-", "Glu-", "Glu+"),
-                   "B" = c("Glu+", "Glu+", "Glu-", "Glu-"),
-                   "C" = c("Glu+", "Glu+", "Glu-", "Glu-"))
+## ----design, echo = FALSE, fig.cap = "Scheme of the yeast example data structure."----
+knitr::include_graphics("designScheme.png", dpi = 30)
 
-## ---- include=TRUE-------------------------------------------------------
-res <- MultiBaC(input, test.comp = 5, cond.factor = cond.factor,
-                showplot = TRUE)
+## --------------------------------------------------------------------------
+my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, 
+                                               B.rna, B.ribo, 
+                                               C.rna, C.par), 
+                    batchFactor = c("A", "A", 
+                                    "B", "B", 
+                                    "C", "C"),
+                    experimentalDesign = list("A" =  c("Glu+", "Glu+", 
+                                                "Glu+", "Glu-", 
+                                               "Glu-", "Glu-"),
+                                       "B" = c("Glu+", "Glu+", 
+                                               "Glu-", "Glu-"),
+                                       "C" = c("Glu+", "Glu+", 
+                                               "Glu-", "Glu-")),
+                    omicNames = c("RNA", "GRO", 
+                                  "RNA", "RIBO", 
+                                  "RNA", "PAR"))
 
-## ---- include=TRUE-------------------------------------------------------
-# Extract corrected matrices
-A.rnacor <- res$A@ExperimentList$RNA
-B.rnacor <- res$B@ExperimentList$RNA
-C.rnacor <- res$C@ExperimentList$RNA
-A.grocor <- res$A@ExperimentList$GRO
-B.ribocor <- res$B@ExperimentList$RIBO
-C.parcor <- res$C@ExperimentList$PAR
+## ---- eval = FALSE, echo = TRUE--------------------------------------------
+#  MultiBaC (mbac,
+#            test.comp = NULL, scale = FALSE,
+#            center = TRUE, crossval = NULL,
+#            Interaction = FALSE,
+#            Variability = 0.90,
+#            showplot = TRUE,
+#            showinfo = TRUE)
 
-# Create a global matrix
-outData <- t(cbind(A.rnacor, B.rnacor, C.rnacor, A.grocor, B.ribocor, C.parcor))
+## ----main-multibac2, include = TRUE, echo = TRUE, fig.cap = "Q2 and explained variance plots. Q2 plot (left) shows the number ob components (x) needed to reach a certain Q2 value (y). The number of components selected for each model is indicated with a triangle symbol. Gray dashed line indicates the 0.7 Q2 threshold. Explained variance plot (right) represents the number of components (x) needed to explain a certain varibility (y) of the effect of interest (batch effect). The number of components selected for each model is indicated with a triangle symbol. Gray dashed line indicates the Variability argument in percentage."----
+my_final_mbac <- MultiBaC (my_mbac,
+          				test.comp = NULL, scale = FALSE, 
+          				center = TRUE, crossval = NULL, 
+          				Interaction = TRUE,
+          				Variability = 0.9,
+          				showplot = TRUE,
+          				showinfo = TRUE)
 
-# Generate PCA analysis
-pc <- ropls::opls(outData, predI = 2, scaleC = "center", plotL = FALSE, printL = FALSE)
+## --------------------------------------------------------------------------
+my_mbac_2 <- genModelList (my_mbac, test.comp = NULL, 
+              			  scale = FALSE, center = TRUE,
+              			  crossval = NULL,
+              			  showinfo = TRUE)
 
-# Plot PCA
-{mypar <- par(no.readonly = TRUE)
-  mai <- c(par()$mai[1:3],par()$pin[2]-0.2)
-  par(mfrow= c(1,1), xpd = TRUE, mai = mai)}
+## --------------------------------------------------------------------------
+multiBatchDesign <- genMissingOmics(my_mbac_2)
 
-plot(pc@scoreMN,
-     xlab = paste0("PC 1: ",
-                   pc@modelDF$`R2X(cum)`[1]*100, " %"),
-     ylab = paste0("PC 2: ",
-                   pc@modelDF$`R2X(cum)`[2]*100, " %"),
-     # pch = omic; fill = condition
-     pch = c(19,19,19,1,1,1,19,19,1,1,19,19,1,1, # RNA
-             15,15,15,0,0,0, # GRO
-             17,17,2,2, # RIBO
-             18,18,5,5),# PAR
-     # col = batch
-     col = rep(c(rep("brown", 6),
-                 rep("dodgerblue2", 4),
-                 rep("forestgreen", 4)),2),
-     # other arguments
-     asp = 1, cex.axis = 1.3, cex.lab = 1.2, cex = 1.7, bty = "L",
-     main = "Scoreplot of corrected data sets", cex.main = 1.7,
-     xlim = c(-30, 40), ylim = c(-30,40))
-abline(v = 0, lty = 5, col = "gray", xpd = FALSE)
-abline(h = 0, lty = 5, col = "gray", xpd = FALSE)
-legend(60,40, legend = c("Shape: Omic",
-                             "RNA", "GRO", "RIBO", "PAR",
-                             "Fill: Condition",
-                             "Glu +", "Glu -",
-                             "Color: Batch",
-                             "Batch A", "Batch B", "Batch C"),
-       col = c("white", rep(1, 4),
-               "white", 1, 1,
-               "white", "brown", "dodgerblue2", "forestgreen"),
-       pch = c(0, 19, 15, 17, 18,
-               0, 19, 1,
-               0, 15, 15, 15), cex = 1.4, bty = "n")
+## --------------------------------------------------------------------------
+my_finalwise_mbac <- batchCorrection(my_mbac_2, 
+                                     multiBatchDesign = multiBatchDesign,
+                                     Interaction = TRUE,
+                                     Variability = 0.90)
 
-## ---- include=TRUE-------------------------------------------------------
-modelList <- genModelList(input, test.comp = 5)$modelList
+## ---- eval = FALSE, echo = TRUE--------------------------------------------
+#  plot (x, typeP = "def",
+#        col.by.batch = TRUE,
+#        col.per.group = NULL,
+#        comp2plot = c(1,2),
+#        legend.text = NULL,
+#        args.legend = NULL, ...)
 
-## ---- include=TRUE-------------------------------------------------------
-missingOmics <- genMissingOmics(input, modelList, commonOmic = 1)
+## ---- eval = TRUE, echo = FALSE--------------------------------------------
+# just one plot in next chunk
+my_aux <- my_final_mbac
+my_final_mbac$PLSmodels <- my_final_mbac$PLSmodels[1]
 
-## ---- include=TRUE-------------------------------------------------------
-res <- batchCorrection(missingOmics, cond.factor)$correctedOmics
-res$A
+## ----inner, fig.cap="Plot of inner relations of PLS components. Only results for batch 'A' are shown as example. Each panel represents the inner correlation of one component of the PCA model. Red line indicates the diagonal when the correlation is maximal (1:1)."----
+plot (my_final_mbac, typeP = "inner", comp2plot = c(1,2))
+
+## ---- eval = TRUE, echo = FALSE--------------------------------------------
+# restore state
+my_final_mbac <- my_aux
+
+## ----batchest, fig.cap="Batch effect estimation plot. Dashed lines represent theoretical batch magnitudes. Violin plots represent the distribution of batch effect coefficents observed in data."----
+plot (my_final_mbac, typeP = "batch")
+
+## ----pca-org, fig.cap="Default PCA plot on the original data."-------------
+plot (my_final_mbac, typeP = "pca.org",
+      asp = 1, cex.axis = 1, cex.lab = 1, cex = 3, bty = "L", 
+      cex.main = 1.2, pch = 19)
+
+## ----pca-cor, fig.cap="Default PCA plot on the corrected data."------------
+plot (my_final_mbac, typeP = "pca.cor", 
+      asp = 1, cex.axis = 1, cex.lab = 1, cex = 3, bty = "L", 
+      cex.main = 1.2, pch = 19)
+
+## ---- include=FALSE--------------------------------------------------------
+knitr::opts_chunk$set(fig.width = 15, fig.height = 12)
+
+## ----pcaplot2, fig.cap="Customized PCA plots. Original (left panels) and Corrected (right panels) data. Upper panels show the second principal component (PC) against the first one while panels at the bottom show the third PC against the first one."----
+custom_col <- c("brown2", "dodgerblue", "forestgreen")
+custom_pch <- c(19,19,19,1,1,1,15,15,15,0,0,0, # batch A
+                  19,19,1,1,17,17,2,2,  # batch B
+                  19,19,1,1,18,18,5,5)  # batch C
+
+plot(my_final_mbac, typeP = "pca.both", col.by.batch = TRUE, 
+     col.per.group = custom_col, comp2plot = 1:3,
+     asp = 1, cex.axis = 1.3, cex.lab = 1.2, cex = 3, bty = "L", 
+     cex.main = 1.7, pch = custom_pch,
+     legend.text = c("Color", names(my_final_mbac$ListOfBatches),
+                     "Shape", c("RNA", "GRO", "RIBO", "PAR"),
+                     "Fill", levels(colData(my_final_mbac$ListOfBatches$A)$tfactor)),
+     args.legend = list("x" = "topright",
+                        "pch" = c(NA, 15, 15, 15, 
+                                  NA, 19, 15, 17, 18, 
+                                  NA, 19, 1),
+                        "col" = c(NA, "brown2", "dodgerblue", "forestgreen",
+                                  NA, rep(1, 4),
+                                  NA, 1, 1),
+                        "bty" = "n",
+                        "cex" = 2))
+
+## --------------------------------------------------------------------------
+sessionInfo()
 

@@ -21,7 +21,6 @@ csl: biomed-central.csl
 vignette: >
   %\VignetteIndexEntry{MultiBaC}
   %\VignetteEngine{knitr::rmarkdown}
-  \usepackage[latin10]{inputenc}
   
 header-includes:
   - \usepackage{color}
