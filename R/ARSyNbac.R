@@ -41,7 +41,7 @@ NULL
 #'                        "C" = c("Glu+", "Glu+", "Glu-", "Glu-")),
 #'                        omicNames = "RNA")
 #' my_final_mbac <- ARSyNbac (my_mbac, batchEstimation = TRUE,
-#'                   Interaction=TRUE, Variability = 0.75, beta = 2,
+#'                   Interaction=TRUE, Variability = 0.90, beta = 2,
 #'                   modelName = "Model 1",
 #'                   showplot = FALSE)
 #'

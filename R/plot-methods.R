@@ -35,11 +35,12 @@
 #'                        omicNames = c("RNA", "GRO", "RNA", "RIBO", "RNA", "PAR"))
 #'
 #' my_final_mbac <- MultiBaC (my_mbac,
-#'                            test.comp = NULL, commonOmic = 1, scale = FALSE,
+#'                            test.comp = NULL, scale = FALSE,
 #'                            center = TRUE, crossval = NULL,
-#'                            Fac = NULL,
-#'                            showplot = TRUE,
-#'                            showinfo = TRUE)
+#'                            Variability = 0.90,
+#'                            Interaction = TRUE ,
+#'                            showplot = FALSE,
+#'                            showinfo = FALSE)
 #' plot(my_final_mbac)
 #
 plot.mbac <- function(x, y = NULL, typeP = "def",
@@ -123,12 +124,14 @@ plot.mbac <- function(x, y = NULL, typeP = "def",
 #'                        omicNames = c("RNA", "GRO", "RNA", "RIBO", "RNA", "PAR"))
 #'
 #' my_final_mbac <- MultiBaC (my_mbac,
-#'                            test.comp = NULL, commonOmic = 1, scale = FALSE,
+#'                            test.comp = NULL, scale = FALSE,
 #'                            center = TRUE, crossval = NULL,
-#'                            Fac = NULL,
-#'                            showplot = TRUE,
-#'                            showinfo = TRUE)
-#' Q2_plot (my_final_mbac$PLSmodels)
+#'                            Variability = 0.90,
+#'                            Interaction = TRUE ,
+#'                            showplot = FALSE,
+#'                            showinfo = FALSE)
+#'
+#' Q2_plot (my_final_mbac)
 #'
 Q2_plot <- function (mbac, ...){
   modelList <- mbac$PLSmodels
@@ -190,12 +193,14 @@ Q2_plot <- function (mbac, ...){
 #'                        omicNames = c("RNA", "GRO", "RNA", "RIBO", "RNA", "PAR"))
 #'
 #' my_final_mbac <- MultiBaC (my_mbac,
-#'                            test.comp = NULL, commonOmic = 1, scale = FALSE,
+#'                            test.comp = NULL, scale = FALSE,
 #'                            center = TRUE, crossval = NULL,
-#'                            Fac = NULL,
-#'                            showplot = TRUE,
-#'                            showinfo = TRUE)
-#' explained_varPlot (my_final_mbac$ARSyNmodels)
+#'                            Variability = 0.90,
+#'                            Interaction = TRUE ,
+#'                            showplot = FALSE,
+#'                            showinfo = FALSE)
+#'
+#' explained_varPlot (my_final_mbac)
 #'
 explained_varPlot <- function(mbac, ...){
   ascamodels <- mbac$ARSyNmodels
@@ -299,12 +304,14 @@ explained_varPlot <- function(mbac, ...){
 #'                        omicNames = c("RNA", "GRO", "RNA", "RIBO", "RNA", "PAR"))
 #'
 #' my_final_mbac <- MultiBaC (my_mbac,
-#'                            test.comp = NULL, commonOmic = 1, scale = FALSE,
+#'                            test.comp = NULL, scale = FALSE,
 #'                            center = TRUE, crossval = NULL,
-#'                            Fac = NULL,
-#'                            showplot = TRUE,
-#'                            showinfo = TRUE)
-#' inner_relPlot (my_final_mbac$PLSmodels)
+#'                            Variability = 0.90,
+#'                            Interaction = TRUE ,
+#'                            showplot = FALSE,
+#'                            showinfo = FALSE)
+#'
+#' inner_relPlot (my_final_mbac)
 #'
 inner_relPlot <- function(mbac, comp2plot = c(1,2), ...) {
 
@@ -494,12 +501,14 @@ batchEstPlot <- function(mbac, ...) {
 #' plot_pca(my_mbac$ListOfBatches, typeP = "pca.org")
 #'
 #' my_final_mbac <- MultiBaC (my_mbac,
-#'                            test.comp = NULL, commonOmic = 1, scale = FALSE,
+#'                            test.comp = NULL, scale = FALSE,
 #'                            center = TRUE, crossval = NULL,
-#'                            Fac = NULL,
-#'                            showplot = TRUE,
-#'                            showinfo = TRUE)
-#' plot_pca(my_final_mbac$CorrectedData, typeP = "pca.cor")
+#'                            Variability = 0.90,
+#'                            Interaction = TRUE ,
+#'                            showplot = FALSE,
+#'                            showinfo = FALSE)
+#'
+#' plot_pca(my_final_mbac, typeP = "pca.cor")
 #'
 plot_pca <- function(mbac, col.by.batch = TRUE, col.per.group = NULL,
                      comp2plot = c(1,2), typeP = "pca.both", legend.text = NULL,

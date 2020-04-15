@@ -46,11 +46,13 @@ my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.p
 plot_pca(my_mbac$ListOfBatches, typeP = "pca.org")
 
 my_final_mbac <- MultiBaC (my_mbac,
-                           test.comp = NULL, commonOmic = 1, scale = FALSE,
+                           test.comp = NULL, scale = FALSE,
                            center = TRUE, crossval = NULL,
-                           Fac = NULL,
-                           showplot = TRUE,
-                           showinfo = TRUE)
-plot_pca(my_final_mbac$CorrectedData, typeP = "pca.cor")
+                           Variability = 0.90,
+                           Interaction = TRUE ,
+                           showplot = FALSE,
+                           showinfo = FALSE)
+
+plot_pca(my_final_mbac, typeP = "pca.cor")
 
 }

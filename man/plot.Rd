@@ -51,10 +51,11 @@ my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.p
                        omicNames = c("RNA", "GRO", "RNA", "RIBO", "RNA", "PAR"))
 
 my_final_mbac <- MultiBaC (my_mbac,
-                           test.comp = NULL, commonOmic = 1, scale = FALSE,
+                           test.comp = NULL, scale = FALSE,
                            center = TRUE, crossval = NULL,
-                           Fac = NULL,
-                           showplot = TRUE,
-                           showinfo = TRUE)
+                           Variability = 0.90,
+                           Interaction = TRUE ,
+                           showplot = FALSE,
+                           showinfo = FALSE)
 plot(my_final_mbac)
 }
