@@ -48,6 +48,9 @@ NULL
 #'
 #'
 #' @examples
+#' #' library('MultiBaC')
+#' data('multiyeast')
+#'
 #' my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par),
 #'                        batchFactor = c("A", "A", "B", "B", "C", "C"),
 #'                        experimentalDesign = list("A" =  c("Glu+", "Glu+",
@@ -143,6 +146,9 @@ MultiBaC <- function(mbac, test.comp = NULL,
 #' @export
 #' @references [1] Nueda MJ, Ferrer A, Conesa A. ARSyN: A method for the identification and removal of systematic noise in multifactorial time course microarray experiments. Biostatistics. 2012;13(3):553-566. doi:10.1093/biostatistics/kxr042
 #' @examples
+#' library('MultiBaC')
+#' data('multiyeast')
+#'
 #' my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par),
 #'                        batchFactor = c("A", "A", "B", "B", "C", "C"),
 #'                        experimentalDesign = list("A" =  c("Glu+", "Glu+", "Glu+",
@@ -264,6 +270,9 @@ batchCorrection <- function(mbac, multiBatchDesign,
 #'
 #' @export
 #' @examples
+#' library('MultiBaC')
+#' data('multiyeast')
+#'
 #' my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par),
 #'                        batchFactor = c("A", "A", "B", "B", "C", "C"),
 #'                        experimentalDesign = list("A" =  c("Glu+", "Glu+",
@@ -348,6 +357,9 @@ genModelList <- function(mbac, test.comp = NULL, scale = FALSE, center = TRUE,
 #'
 #' @export
 #' @examples
+#' library('MultiBaC')
+#' data('multiyeast')
+#'
 #' my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par),
 #'                        batchFactor = c("A", "A", "B", "B", "C", "C"),
 #'                        experimentalDesign = list("A" =  c("Glu+", "Glu+",

@@ -1,5 +1,3 @@
-####    plot  (mbac)  ####
-
 #' Plot Method for mbac
 #'
 #' plot function for \code{mbac} class.
@@ -25,6 +23,9 @@
 #' @return A plot is displayed.
 #'
 #' @examples
+#' library('MultiBaC')
+#' data('multiyeast')
+#'
 #' my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par),
 #'                        batchFactor = c("A", "A", "B", "B", "C", "C"),
 #'                        experimentalDesign = list("A" =  c("Glu+", "Glu+",
@@ -110,6 +111,9 @@ plot.mbac <- function(x, y = NULL, typeP = "def",
 #' @return Q2 plot of PLS models is displayed.
 #'
 #' @examples
+#' library('MultiBaC')
+#' data('multiyeast')
+#'
 #' my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par),
 #'                        batchFactor = c("A", "A", "B", "B", "C", "C"),
 #'                        experimentalDesign = list("A" =  c("Glu+", "Glu+",
@@ -174,6 +178,8 @@ Q2_plot <- function (mbac, ...){
 #' @export
 #'
 #' @examples
+#' library('MultiBaC')
+#' data('multiyeast')
 #'
 #' my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par),
 #'                        batchFactor = c("A", "A", "B", "B", "C", "C"),
@@ -281,6 +287,9 @@ explained_varPlot <- function(mbac, ...){
 #' @export
 #'
 #' @examples
+#' library('MultiBaC')
+#' data('multiyeast')
+#'
 #' my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par),
 #'                        batchFactor = c("A", "A", "B", "B", "C", "C"),
 #'                        experimentalDesign = list("A" =  c("Glu+", "Glu+",
@@ -354,6 +363,9 @@ inner_relPlot <- function(mbac, comp2plot = c(1,2), ...) {
 #' @export
 #'
 #' @examples
+#' library('MultiBaC')
+#' data('multiyeast')
+#'
 #' my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par),
 #'                        batchFactor = c("A", "A", "B", "B", "C", "C"),
 #'                        experimentalDesign = list("A" =  c("Glu+", "Glu+",
@@ -468,6 +480,9 @@ batchEstPlot <- function(mbac, ...) {
 #' @export
 #'
 #' @examples
+#' library('MultiBaC')
+#' data('multiyeast')
+#'
 #' my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par),
 #'                        batchFactor = c("A", "A", "B", "B", "C", "C"),
 #'                        experimentalDesign = list("A" =  c("Glu+", "Glu+",
