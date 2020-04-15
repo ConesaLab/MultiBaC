@@ -16,6 +16,9 @@ A list of *MultiAssayExperiment* structures. In this case, each batch contains a
 This function generates for all the batches the omic data they had not originally. This is the previous step to apply ARSyNbac [1] correction.
 }
 \examples{
+library('MultiBaC')
+data('multiyeast')
+
 my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par),
                        batchFactor = c("A", "A", "B", "B", "C", "C"),
                        experimentalDesign = list("A" =  c("Glu+", "Glu+",

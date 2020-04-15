@@ -33,6 +33,9 @@ Custom mbac object. Elements in a mbac object:
 This function performs PLS models for every batch. A PLS model is generated for each non-common omic in each batch.
 }
 \examples{
+library('MultiBaC')
+data('multiyeast')
+
 my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par),
                        batchFactor = c("A", "A", "B", "B", "C", "C"),
                        experimentalDesign = list("A" =  c("Glu+", "Glu+",

@@ -20,6 +20,9 @@ Inner relation plot for PLS models is displayed.
 inner_relPLot
 }
 \examples{
+library('MultiBaC')
+data('multiyeast')
+
 my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par),
                        batchFactor = c("A", "A", "B", "B", "C", "C"),
                        experimentalDesign = list("A" =  c("Glu+", "Glu+",
