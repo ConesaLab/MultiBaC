@@ -70,7 +70,7 @@ However, ARSyN can also be applied when the batch factor is not known since the 
 
 
 ### How to cite ARSyN
-Nueda MJ, Ferrer A, Conesa A.(2012). [ARSyN: A method for the identification and removal of systematic noise in multifactorial time course microarray experiments](https://doi.org/10.1093/biostatistics/kxr042). *Bioinformatics* 13:553-66. 
+Nueda MJ, Ferrer A, Conesa A.(2012). [ARSyN: A method for the identification and removal of systematic noise in multifactorial time course microarray experiments](https://doi.org/10.1093/biostatistics/kxr042). *Biostatistics* 13:553-66. 
 
 
 
