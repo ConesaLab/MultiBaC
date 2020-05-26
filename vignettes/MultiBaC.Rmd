@@ -2,9 +2,9 @@
 title: "MultiBaC user's guide"
 author: 
 - name: Manuel Ugidos
-  affiliation: Gene Expression and RNA Metabolism Laboratory, Instituto de Biomedicina de Valencia, Consejo Superior de Investigaciones Científicas (CSIC), Valencia, Spain.
+  affiliation: Gene Expression and RNA Metabolism Laboratory, Instituto de Biomedicina de Valencia, Consejo Superior de Investigaciones Cient\'ificas (CSIC), Valencia, Spain.
 - name: Sonia Tarazona
-  affiliation: Multivariate Statistical Engineering Group, Department of Applied Statistics, Operations Research and Quality, Universitat Politècnica de València, Valencia, Spain
+  affiliation: Multivariate Statistical Engineering Group, Department of Applied Statistics, Operations Research and Quality, Universitat Polit\`{e}cnica de Val\`{e}ncia, Valencia, Spain
 - name: Maria J. Nueda
   affiliation: Department of Mathematics, Alicante Universiy, Spain
 package: MultiBaC
@@ -47,12 +47,12 @@ library("MultiBaC")
 # Introduction
 
 Simultaneously generating multiple omic measurements (e.g. transcriptomics, metabolomics,
-proteomics or epigenomics) of the same molecular system for one particular study is not always possible. As a consequence, researchers sometimes combine compatible data generated in different labs or in different batches. In such cases, data will usually be affected by an unwanted effect associated to the experimentation event (lab, batch, technology, etc.) that, especially for high throughput molecular assays, may result in important levels of noise contaminating the biological signal. This unwanted source of variation is commonly known as “batch effect” and is very frequently seen as the first source of variability in the omic dataset, standing out over the experimental conditions under study.
+proteomics or epigenomics) of the same molecular system for one particular study is not always possible. As a consequence, researchers sometimes combine compatible data generated in different labs or in different batches. In such cases, data will usually be affected by an unwanted effect associated to the experimentation event (lab, batch, technology, etc.) that, especially for high throughput molecular assays, may result in important levels of noise contaminating the biological signal. This unwanted source of variation is commonly known as ``batch effect'' and is very frequently seen as the first source of variability in the omic dataset, standing out over the experimental conditions under study.
 
 Removing batch effects becomes then necessary in order to obtain meaningful results from statistical analyses. Provided that the omic experiment has been designed in such a way that batch effects are not confounded with the effects of interest (treatment, disease, cell type, etc.), the so-called Batch Effect Correction Algorithms (BECAs) can be used to remove, or at least mitigate, systematic biases.Therefore these methods are extremely useful to combine data from different laboratories or measured at different times. One of these BECAs is the ARSyN method [@Nueda2012], which relies on the ANOVA-Simultaneous Components Analysis (ASCA) framework to decompose the omic signal into experimental effects and other unwanted effects. ARSyN applies Principal Component Analysis (PCA) to estimate the systematic variation due to batch effect and then removes it from the original data.
 
 BECAs have been traditionally applied to remove batch effects from omic data of the same
-type, as for example gene expression. However, while removing batch effects from a single omic data type with an appropriate experimental design is relatively straightforward, it can become unapproachable when dealing with multiomic datasets. In the multiomic scenario, each omic modality may have been measured by a different lab or at a different moment in time, and so it is obtained within a different batch. When this is the case, the batch effect will be confounded with the “omic type effect” and will be impossible to remove from the data. However, in some scenarios, the multiomic batch effect can be corrected. MultiBaC is the first BECA dealing with batch effect correction in multiomic datasets. MultiBaC can remove batch effects across different omics generated within separate batches provided that at least one common omic data type is included in all the batches. 
+type, as for example gene expression. However, while removing batch effects from a single omic data type with an appropriate experimental design is relatively straightforward, it can become unapproachable when dealing with multiomic datasets. In the multiomic scenario, each omic modality may have been measured by a different lab or at a different moment in time, and so it is obtained within a different batch. When this is the case, the batch effect will be confounded with the ``omic type effect'' and will be impossible to remove from the data. However, in some scenarios, the multiomic batch effect can be corrected. MultiBaC is the first BECA dealing with batch effect correction in multiomic datasets. MultiBaC can remove batch effects across different omics generated within separate batches provided that at least one common omic data type is included in all the batches. 
 
 The **MultiBaC** package includes two BECAs: the ARSyN method for correcting batch effect from a single omic data type and the MultiBac method, which deals with the batch effect problem on multi-omic assays.
 
@@ -264,7 +264,7 @@ However, there are some requirements for the multi-omic data set in order to rem
 
 
 ### How to cite MultiBaC
-Ugidos M, Tarazona S, Prats-Montalbán JM, Ferrer A, Conesa A.(2020). [MultiBaC: A strategy to remove batch effects between different omic data types](https://doi.org/10.1177/0962280220907365). *Statistical Methods in Medical Research*. 
+Ugidos M, Tarazona S, Prats-Montalb\'an JM, Ferrer A, Conesa A.(2020). [MultiBaC: A strategy to remove batch effects between different omic data types](https://doi.org/10.1177/0962280220907365). *Statistical Methods in Medical Research*. 
 
 
 ## Example: Yeast multiomic dataset

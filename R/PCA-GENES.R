@@ -1,22 +1,6 @@
 NULL
 
-#' Function to obtain principal components to a matrix that has more variables than individuals.
-#'
-#' @param X Matrix that has on columns the genes considered as variables in the PCA analysis.
-#' @param ncomp Number of components to extract with the PCA model.
-#'
-#' @return A list with elements:
-#' \describe{
-#'     \item{eigen}{}
-#'     \item{var.exp}{}
-#'     \item{scores}{}
-#'     \item{loadings}{}
-#' }
-#'
-#' @examples
-#' \dontrun{
-#' my.pca <- PCA.GENES(data.example)
-#' }
+
 PCA.GENES<-function(X, ncomp = NULL)
 {
 #PCA.GENES is very useful to obtain principal components to a matrix that has more variables than individuals.
