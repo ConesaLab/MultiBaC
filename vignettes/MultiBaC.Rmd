@@ -479,12 +479,12 @@ An example of the usage of these PCA plots for the *ARSyNbac* output can be foun
 
 ```{r pca-org, fig.cap="Default PCA plot on the original data."}
 plot (my_final_mbac, typeP = "pca.org",
-      asp = 1, cex.axis = 1, cex.lab = 1, cex = 3, bty = "L", 
+      cex.axis = 1, cex.lab = 1, cex = 3, bty = "L", 
       cex.main = 1.2, pch = 19)
 ```
 ```{r pca-cor, fig.cap="Default PCA plot on the corrected data."}
 plot (my_final_mbac, typeP = "pca.cor", 
-      asp = 1, cex.axis = 1, cex.lab = 1, cex = 3, bty = "L", 
+      cex.axis = 1, cex.lab = 1, cex = 3, bty = "L", 
       cex.main = 1.2, pch = 19)
 ```
 
@@ -502,7 +502,7 @@ custom_pch <- c(19,19,19,1,1,1,15,15,15,0,0,0, # batch A
 
 plot(my_final_mbac, typeP = "pca.both", col.by.batch = TRUE, 
      col.per.group = custom_col, comp2plot = 1:3,
-     asp = 1, cex.axis = 1.3, cex.lab = 1.2, cex = 3, bty = "L", 
+     cex.axis = 1.3, cex.lab = 1.2, cex = 3, bty = "L", 
      cex.main = 1.7, pch = custom_pch,
      legend.text = c("Color", names(my_final_mbac$ListOfBatches),
                      "Shape", c("RNA", "GRO", "RIBO", "PAR"),
