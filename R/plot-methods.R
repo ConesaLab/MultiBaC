@@ -606,6 +606,7 @@ plot_pca <- function(mbac, col.by.batch = TRUE, col.per.group = NULL,
                        round(pc1$var.exp[comp2plot[2],1], digits = 4)*100, " %"),
          # pch = omic; fill = condition
          col = color,
+         asp = 1,
          # other arguments
          main = title, xlim = c(min(pc1$scores[,comp2plot[1]]), (max(pc1$scores[,comp2plot[1]]+5)+
                                                                    max(pc1$scores[,comp2plot[1]]+5)*0.3)),
@@ -649,6 +650,7 @@ plot_pca <- function(mbac, col.by.batch = TRUE, col.per.group = NULL,
                          round(pc2$var.exp[comp2plot[2],1], digits = 4)*100, " %"),
            # pch = omic; fill = condition
            col = color,
+           asp = 1,
            # other arguments
            main = "PCA of corrected data", xlim = c(min(pc2$scores[,comp2plot[1]]), (max(pc1$scores[,comp2plot[1]]+5)+
                                                                                        max(pc1$scores[,comp2plot[1]]+5)*0.3)),
