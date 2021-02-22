@@ -1,7 +1,7 @@
 Package: MultiBaC
 Type: Package
 Title: Multiomic Batch effect Correction
-Version: 1.3.0
+Version: 0.99.21
 Authors@R: c(person("Manuel", "Ugidos",role = c("aut", "cre"), email = "manuelugidos@gmail.com"), person("Sonia", "Tarazona", role = c("aut")), person("María José", "Nueda", role = c("aut")))
 Description: MultiBaC is a strategy to correct batch effects from multiomic datasets distributed across different labs or data acquisition events. MultiBaC is the first Batch effect correction algorithm that dealing with batch effect correction in multiomics datasets. MultiBaC is able to remove batch effects across different omics generated within separate batches provided that at least one common omic data type is included in all the batches considered.
 License: GPL-3
