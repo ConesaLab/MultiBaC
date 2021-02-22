@@ -3,8 +3,7 @@
 NULL
 
 mbacClass = function(list, ...) {
-  model = structure(list, class = "mbac",
-                    my_attribute = "MultiBaC_output")
+  model = structure(list, class = "mbac")
   return(model)
 }
 

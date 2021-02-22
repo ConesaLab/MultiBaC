@@ -158,3 +158,39 @@ createMbac <- function(inputOmics, batchFactor = NULL,
 
   return(mbacClass(retobj))
 }
+
+
+#' summary.mbac
+#'
+#' Displays the structure and the content of the object of class mbac.
+#'
+#' @param mbac An object of class mbac.
+#'
+#' @return Custom mbac object. Elements in a mbac object:
+#' @export
+#'
+#' @examples
+#' data('multiyeast')
+#'
+#' my_mbac <- createMbac (inputOmics = list(A.rna, A.gro, B.rna, B.ribo, C.rna, C.par),
+#'                        batchFactor = c("A", "A", "B", "B", "C", "C"),
+#'                        experimentalDesign = list("A" =  c("Glu+", "Glu+",
+#'                        "Glu+", "Glu-", "Glu-", "Glu-"),
+#'                        "B" = c("Glu+", "Glu+", "Glu-", "Glu-"),
+#'                        "C" = c("Glu+", "Glu+", "Glu-", "Glu-")),
+#'                        omicNames = c("RNA", "GRO", "RNA", "RIBO", "RNA", "PAR"),
+#'                        commonOmic = "RNA")
+#' summary(my_mbac)
+#'
+summary.mbac <- function(mbac) {
+  batches <- names(mbac$ListOfBatches)
+  omics <- lapply(mbac$ListOfBatches, names)
+  print(paste0("Object of class mbac: It contains ", length(batches), " different bacthes and ", 
+               length(unique(unlist(omics))), " omic types."))
+  toplot <-  matrix(NA, length(batches), length(unique(unlist(omics))))
+  rownames(toplot) <- batches; colnames(toplot) <- unique(unlist(omics))
+  for ( i in batches) {
+    toplot[i,names(mbac$ListOfBatches[[i]])] <- TRUE
+  }
+  knitr::kable(toplot)
+}

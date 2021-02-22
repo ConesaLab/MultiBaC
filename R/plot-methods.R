@@ -57,6 +57,8 @@ plot.mbac <- function(x, y = NULL, typeP = "def",
               } else if (sum(is.element(c("PLSmodels", "ARSyNmodels"), names(x))) < 1) {
                 stop("Default plot is not possible with the current mbac object. Please select another plot type with typeP argument")
               } else {
+                initpar <- par()
+                on.exit(par(mfrow = initpar))
                 par(mfrow = c(1,2))
                 Q2_plot(x, ...)
                 par(xpd = FALSE)
@@ -325,8 +327,8 @@ inner_relPlot <- function(mbac, comp2plot = c(1,2), ...) {
 
 
       # Create layout
-      initpar <- par(c("mfrow"))
-      on.exit(par(mfrow = initpar))
+      initpar <- par()
+      on.exit(par(initpar))
       grid <- floor(ncomp/2) + ncomp%%2
       par(mfrow = c(grid,2), xpd = FALSE)
 
@@ -509,7 +511,7 @@ plot_pca <- function(mbac, col.by.batch = TRUE, col.per.group = NULL,
                      args.legend = NULL, ...) {
 
   initpar <- par(c("mfrow"))
-  #on.exit(par(mfrow = initpar))
+  on.exit(par(mfrow = initpar))
   ListOfBatches <- mbac$ListOfBatches
   if ( !is.null(mbac$CorrectedData)) {
     CorrectedData <- mbac$CorrectedData
