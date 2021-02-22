@@ -34,8 +34,8 @@ You can then install `MultiBaC` using the following
 code:
 
 ```r
-## install mixOmics
-BiocManager::install('mixOmics')
+## install MultiBaC
+BiocManager::install('MultiBaC')
 ```
 
 #### `GitHub` Versions
