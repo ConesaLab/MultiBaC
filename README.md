@@ -1,6 +1,5 @@
 # MultiBaC R package repository
 
-[![](https://img.shields.io/badge/bioc%20release-6.12.2-green.svg)](https://www.bioconductor.org/packages/MultiBaC)
 [![download](http://www.bioconductor.org/shields/downloads/release/MultiBaC.svg)](https://bioconductor.org/packages/stats/bioc/MultiBaC)
 [![](https://img.shields.io/github/last-commit/ConesaLab/MultiBaC.svg)](https://github.com/ConesaLab/MultiBaC/commits/master)
 [![dependencies](http://bioconductor.org/shields/dependencies/release/MultiBaC.svg)](http://bioconductor.org/packages/release/bioc/html/MultiBaC.html#since)
