@@ -43,7 +43,7 @@ MultiBaC can be also directly installed from this repository:
 
 ```r
 install.packages("devtools")
-devtools::install_bitbucket("ConesaLab/MultiBaC")
+devtools::install_github("ConesaLab/MultiBaC")
 ```
 
 ## Contribution
