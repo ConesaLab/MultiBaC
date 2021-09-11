@@ -203,7 +203,7 @@ plot(arsyn_1, typeP="pca.cor", bty = "L",
                         "cex" = 1.2))
 ```
 
-According to the left plot in Figure \@ref(fig:arsyn1), two principal components (PCs) have been selected to explain at least 95% of the total variability of batch effect. These two PCs are shown in the right panel and now the main source of variability in the data (PC1) is given by the experimental condition, while samples are not clustered by batches anymore.   
+According to the left plot in Figure \@ref(fig:arsyn1), two principal components (PCs) have been selected to explain at least 95% of the total variability of batch effect. PCA of corrected data with this analysis is shown in the right panel. Now the main source of variability in the data (PC1) is given by the experimental condition, while samples are not clustered by batches anymore.   
 
 ```{r arsyn2, message = FALSE, fig.cap = "Batch correction when Interaction = TRUE. Left: Explained variance plot. Default plot when showplot = TRUE. It represents the number of components (x axis) needed to explain a certain variability (y axis) of the effect of interest (batch effect). The number of components selected in the model is indicated with a triangle symbol. Gray dashed line indicates the threshold given by the Variability argument (in percentage). Right: PCA plot of corrected gene expression data considering the interaction batch-condition."}
 par(mfrow = c(1,2))
