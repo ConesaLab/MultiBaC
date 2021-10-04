@@ -23,5 +23,6 @@ Collate:
     'MultiBaC.R'
     'createMbac.R'
     'plot-methods.R'
+    'summary-function.R'
 NeedsCompilation: no
 RoxygenNote: 6.1.1
