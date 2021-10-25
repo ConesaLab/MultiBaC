@@ -1,5 +1,6 @@
 #' @import ggplot2
 #' @import graphics
+#' @import plotrix
 NULL
 
 mbacClass = function(list, ...) {
