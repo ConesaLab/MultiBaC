@@ -58,7 +58,7 @@ plot.mbac <- function(x, y = NULL, typeP = "def",
                 stop("Default plot is not possible with the current mbac object. Please select another plot type with typeP argument")
               } else {
                 initpar <- par()
-                on.exit(par(mfrow = initpar))
+                on.exit(par(mfrow = initpar$mfrow))
                 par(mfrow = c(1,2))
                 Q2_plot(x, ...)
                 par(xpd = FALSE)
@@ -148,7 +148,7 @@ Q2_plot <- function (mbac, ...){
   # Make plot
   plot(1:3,1:3, type = "n", pch = 19,
        ylim = c(min(unlist(q2values)),1), xaxt = "n",
-       xlim = c(1,test.comp+1), xlab="Number of Components", ylab = "Squared Q value",
+       xlim = c(1,test.comp+2), xlab="Number of Components", ylab = "Squared Q value",
        main = "Q2 plot", bty = "L",
        cex.lab = 1.25, cex.axis = 1.25, font.lab = 2, cex.main=1.5)
   names <- c()
@@ -163,9 +163,13 @@ Q2_plot <- function (mbac, ...){
     }
   }
   axis(1, seq_len(test.comp), c(seq_len(test.comp)), cex.axis = 1.25)
-  legend(test.comp-2.1, 0.65,
-         bty = "n", title = "Batches",
-         legend = names,
+
+  cood <- findGrid(test.comp, unlist(q2values, recursive = FALSE))
+  legend(cood$x, cood$y,
+         bty = "o", title = "Batches", bg = rgb(255, 255, 255, alpha = 0.6*255,
+                                                maxColorValue = 255),
+         box.lwd = 0,
+         legend = names, xjust = 0.5, yjust = 0.5,
          col = c(pallete),
          cex = 1.5, lty = c(1,1), pch = c(19,19))
 }
@@ -273,9 +277,13 @@ explained_varPlot <- function(mbac, ...){
   }
 
   axis(1, 0:(length(ascamodels[[1]])-1), 0:(length(ascamodels[[1]])-1), cex.axis = 1.25)
-  legend(min(2,length(ascamodels[[1]])-2), 50,
-         bty = "n", title = "Omics",
+  cood <- findGrid(test.comp, lapply(ascamodels, function(x) x*100))
+  legend(cood$x, cood$y,
+         bty = "o", title = "Omics", bg = rgb(255, 255, 255, alpha = 0.6*255,
+                                             maxColorValue = 255),
+         box.lwd = 0,
          legend = c(names(ascamodels)),
+         xjust = 0.5, yjust = 1,
          col = c(pallete[1], pallete[2:4]),
          cex = 1.5, lty = rep(1,length(ascamodels)), pch = rep(19,length(ascamodels)))
 }
@@ -743,5 +751,3 @@ plot_pca <- function(mbac, col.by.batch = TRUE, col.per.group = NULL,
     }
   }
 }
-
-
