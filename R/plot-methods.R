@@ -148,7 +148,7 @@ Q2_plot <- function (mbac, ...){
   # Make plot
   plot(1:3,1:3, type = "n", pch = 19,
        ylim = c(min(unlist(q2values)),1), xaxt = "n",
-       xlim = c(1,test.comp+2), xlab="Number of Components", ylab = "Squared Q value",
+       xlim = c(1,test.comp+1), xlab="Number of Components", ylab = "Squared Q value",
        main = "Q2 plot", bty = "L",
        cex.lab = 1.25, cex.axis = 1.25, font.lab = 2, cex.main=1.5)
   names <- c()
