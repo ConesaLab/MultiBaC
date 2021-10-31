@@ -1,3 +1,5 @@
+#' @import grDevices
+
 #' Plot Method for mbac
 #'
 #' plot function for \code{mbac} class.
