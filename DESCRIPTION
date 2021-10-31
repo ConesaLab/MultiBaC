@@ -1,11 +1,8 @@
 Package: MultiBaC
 Type: Package
 Title: Multiomic Batch effect Correction
-<<<<<<< HEAD
-Version: 0.99.21
 Authors@R: c(person("Manuel", "Ugidos",role = c("aut", "cre"), email = "manuelugidos@gmail.com"), person("Sonia", "Tarazona", role = c("aut")), person("María José", "Nueda", role = c("aut")))
-=======
-Version: 1.3.0
+Version: 1.5.0
 Author: person("Manuel", "Ugidos", email = "manuelugidos@gmail.com"), person("Sonia", "Tarazona", email = "sotacam@gmail.com"), person("María José", "Nueda", email = "mjnueda@ua.es")
 Maintainer: The package maintainer <manuelugidos@gmail.com>
 >>>>>>> upstream/master
