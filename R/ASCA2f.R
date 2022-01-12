@@ -19,6 +19,15 @@ ASCA.2f<-function(X = X, Designa = Designa, Designb = Designb,
   p<-nrow(X)
   I<-ncol(Designa)
   J<-ncol(Designb)
+  
+  if (Interaction) {
+    Fac <- c(ncol(Designa)-1,ncol(Designb)*ncol(Designa)-1,2)
+    names(Fac) <- c("Model.a", "Model.bab", "Model.res")
+  } else {
+    Fac <- c(ncol(Designa)-1,ncol(Designb)-1,2)
+    names(Fac) <- c("Model.a", "Model.b", "Model.res")
+  }
+
 
   Faca=Fac[1] # number components Model a (time)
   Facbab=Fac[2] # number components Model bab (second factor or second factor plus interaction)
