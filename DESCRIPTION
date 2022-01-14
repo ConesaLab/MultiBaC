@@ -10,7 +10,7 @@ License: GPL-3
 Encoding: UTF-8
 biocViews: Software, StatisticalMethod, PrincipalComponent, DataRepresentation, GeneExpression, Transcription, BatchEffect
 Imports: Matrix, ggplot2, MultiAssayExperiment, ropls, graphics, methods, plotrix, grDevices
-Suggests: knitr, rmarkdown, BiocStyle, devtools
+Suggests: knitr, rmarkdown, BiocStyle, devtools, PCAtools
 VignetteBuilder: knitr
 Collate:
     'auxfunctions.R'
