@@ -38,15 +38,12 @@ if(p<500) {
   crossval <- 5
 }
 
-pc <- ropls::opls(Xoff,
-                  predI = ncomp, fig.pdfC = "none", info.txtC = "none",
-                  algoC = "nipals",
-                  crossvalI = crossval, scaleC = "none")
-eigen <- pc@scoreMN
-scores1 <- pc@scoreMN
-loadings1 <- pc@loadingMN
-var <- data.frame(pc@modelDF$`R2X`,
-                  pc@modelDF$`R2X(cum)`)
+pc <- pcaMethods::nipalsPca(Xoff, nPcs = ncomp)
+eigen <- pc@scores
+scores1 <- pc@scores
+loadings1 <- pc@loadings
+var <- data.frame(pc@R2cum,
+                  pc@R2cum)
 rownames(var) <- 1:ncomp
 
 output<-list(eigen,var,scores1,loadings1)
