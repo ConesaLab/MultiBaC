@@ -9,8 +9,8 @@ Description: MultiBaC is a strategy to correct batch effects from multiomic data
 License: GPL-3
 Encoding: UTF-8
 biocViews: Software, StatisticalMethod, PrincipalComponent, DataRepresentation, GeneExpression, Transcription, BatchEffect
-Imports: Matrix, ggplot2, MultiAssayExperiment, ropls, graphics, methods, plotrix, grDevices
-Suggests: knitr, rmarkdown, BiocStyle, devtools, pcaMethods
+Imports: Matrix, ggplot2, MultiAssayExperiment, ropls, graphics, methods, plotrix, grDevices, pcaMethods
+Suggests: knitr, rmarkdown, BiocStyle, devtools
 VignetteBuilder: knitr
 Collate:
     'auxfunctions.R'
