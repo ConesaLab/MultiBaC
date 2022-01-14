@@ -44,12 +44,12 @@ createPLSmodel <- function(omicslist, test.comp, messages = TRUE,
     plsModel <- ropls::opls(t(omicslist[[regressor]]), t(omicslist[[i]]),
                             predI = test.comp, fig.pdfC = "none", info.txtC = "none",
                             crossvalI = crossval, scaleC = pret)
-    # q2v <- plsModel@modelDF$`Q2(cum)`
+    q2v <- plsModel@modelDF$`Q2(cum)`
 
     # Built final model -----------------------------------------------------------
-    # plsModel <- ropls::opls(t(omicslist[[1]]), t(omicslist[[i]]),
-    #                        predI = which(q2v == max(q2v))[1], fig.pdfC = "none", info.txtC = "none",
-    #                        crossvalI = dim(t(omicslist[[1]]))[1], scaleC = pret)
+    plsModel <- ropls::opls(t(omicslist[[1]]), t(omicslist[[i]]),
+                           predI = which(q2v == max(q2v))[1], fig.pdfC = "none", info.txtC = "none",
+                           crossvalI = dim(t(omicslist[[1]]))[1], scaleC = pret)
     models[[(i-1)]] <- plsModel
   }
   names(models) <- names(omicslist)[-1]
