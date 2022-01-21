@@ -1,4 +1,4 @@
-ASCA.1f<-function(X = X, Designa = Designa, Designb=NULL, Designc=NULL, Fac=c(1,2), Join=NULL, Interaction=NULL,
+ASCA.1f<-function(X = X, Designa = Designa, Designb=NULL, Designc=NULL, Fac=c(1,2), Join=NULL, Interaction=FALSE,
                   Variability, beta)
 
 {
@@ -14,6 +14,14 @@ ASCA.1f<-function(X = X, Designa = Designa, Designb=NULL, Designc=NULL, Fac=c(1,
   n<-ncol(X)
   p<-nrow(X)
   I<-ncol(Designa)
+
+  if (Interaction) {
+    Fac <- c(ncol(Designa)-1,2)
+    names(Fac) <- c("Model.a", "Model.res")
+  } else {
+    Fac <- c(ncol(Designa)-1,2)
+    names(Fac) <- c("Model.a", "Model.res")
+  }
 
   Faca=Fac[1] # number components Model a (time)
   Facres=Fac[2] # number components Residues
@@ -64,4 +72,3 @@ ASCA.1f<-function(X = X, Designa = Designa, Designb=NULL, Designc=NULL, Fac=c(1,
 
   output
 }
-
